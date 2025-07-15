@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RAMY
 
-## Getting Started
+**RAMY** est une application web légère 🚆 permettant de consigner et consulter les trajets ferroviaires personnels. Développée comme une alternative autonome à Notion, elle permet une saisie rapide et structurée des informations liées à chaque trajet effectué.
 
-First, run the development server:
+Conçue avant tout pour une utilisation mobile 📱, RAMY permet de noter ses trajets en quelques secondes, directement depuis le quai ou une rame, sans distraction ni surcharge.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🎯 Objectif du projet
+
+L'objectif principal de RAMY est de proposer un outil simple, hébergeable sur un serveur web classique, pour permettre un suivi personnalisé des rames empruntées au quotidien.
+
+## ✨ Fonctionnalités principales
+
+* 🏠 Page d'accueil listant les lignes de train (RER, Transilien, etc.)
+* 📝 Formulaire unique pour l'ajout de trajets, avec préremplissage du matériel selon la ligne sélectionnée
+* 📋 Possibilité d'accéder à un tableau récapitulatif de tous les trajets enregistrés
+* ✅ Retour visuel après chaque soumission validée
+
+## 🛠️ Technologies utilisées
+
+* **Frontend** : HTML, CSS (vanilla), JavaScript
+* **Backend** : PHP (sans framework)
+* **Base de données** : SQLite
+* **Hébergement** : Compatible avec la plupart des hébergements web classiques
+
+## 🗂 Architecture du projet
+
+```
+/
+├── index.php        # Accueil avec les lignes de train
+├── add.php          # Formulaire d'ajout générique
+├── submit.php       # Traitement du formulaire et insertion en base
+├── view.php         # Visualisation des trajets enregistrés
+├── db.sqlite        # Base de données SQLite locale
+└── assets/          # Feuilles de style et scripts JS
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧾 Licence
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Ce projet est distribué sous la licence **GNU Affero General Public License v3.0 (AGPL-3.0)**. Cela signifie que :
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* Vous êtes libre de consulter, utiliser, modifier et redistribuer le code source.
+* Si vous mettez à disposition une version modifiée de ce projet sur un serveur (ex. : via un site web accessible publiquement), vous devez également rendre le code source de cette version accessible.
 
-## Learn More
+Ce projet est destiné à un usage personnel ou non-commercial. Pour tout usage en production publique ou commercial, une autorisation préalable est requise.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+RAMY se veut simple, rapide à déployer ⚡, et adapté à un usage quotidien pour le suivi personnel des trajets ferroviaires 📈.
