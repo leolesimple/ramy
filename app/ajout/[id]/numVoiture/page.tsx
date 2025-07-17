@@ -1,16 +1,14 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import type { PageProps } from 'next'; // ← 👈 voici l'import important
-
-export default function NumVoiturePage({ params }: PageProps<{ id: string }>) {
-    const [supabase, setSupabase] = useState<any>(null);
+import type { SupabaseClient } from '@supabase/supabase-js';
+export default function NumVoiturePage() {
+    const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
     const router = useRouter();
     const searchParams = useSearchParams();
+    const params = useParams<{ id: string }>();
 
     const [numeroVoiture, setNumeroVoiture] = useState('');
     const [codePorte, setCodePorte] = useState('');
