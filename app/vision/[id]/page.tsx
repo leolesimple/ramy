@@ -4,20 +4,19 @@ import {VisionHeader} from '@/app/ui/VisionHeader';
 import Link from 'next/link';
 import Image from 'next/image';
 
-type Props = {
-    params: {
-        id: string;
-    };
+type PageProps = {
+    params: Promise<{ id: string }>;
 };
 
-export default async function VisionMaterielPage({params}: Props) {
+export default async function VisionMaterielPage({ params }: PageProps) {
+    const { id } = await params;
     const supabase = await createClient();
 
     // Récupération de la ligne
     const {data: ligne} = await supabase
         .from('lignes')
         .select('*')
-        .eq('id', params.id)
+        .eq('id', id)
         .single();
 
     if (!ligne) notFound();
@@ -26,7 +25,7 @@ export default async function VisionMaterielPage({params}: Props) {
     const {data: liens, error} = await supabase
         .from('ligne_materiels')
         .select('materiel_id')
-        .eq('ligne_id', params.id);
+        .eq('ligne_id', id);
 
     if (!liens || error) {
         console.error('Erreur récupération liens ligne/matériel', error);
@@ -51,7 +50,7 @@ export default async function VisionMaterielPage({params}: Props) {
                     {materiels.map((mat) => (
                         <Link
                             key={mat.id}
-                            href={`/vision/${params.id}/table?idMateriel=${mat.id}`}
+                            href={`/vision/${id}/table?idMateriel=${mat.id}`}
                             className="group relative"
                         >
                             <div
