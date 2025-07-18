@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { createBrowserClient } from '@supabase/ssr';
-import { VisionHeader } from '@/app/ui/VisionHeader';
-import { useSearchParams, useParams, useRouter } from 'next/navigation';
-import { PlusIcon } from '@heroicons/react/24/solid';
+import {useEffect, useState} from 'react';
+import {createBrowserClient} from '@supabase/ssr';
+import {VisionHeader} from '@/app/ui/VisionHeader';
+import {useParams, useRouter, useSearchParams} from 'next/navigation';
+import {PlusIcon} from '@heroicons/react/24/solid';
 
 type Ligne = {
     id: string;
@@ -47,26 +47,26 @@ export default function VisionTablePage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const { data: ligneData } = await supabase
+            const {data: ligneData} = await supabase
                 .from('lignes')
                 .select('*')
                 .eq('id', params.id)
                 .single();
             setLigne(ligneData);
 
-            const { data: matData } = await supabase
+            const {data: matData} = await supabase
                 .from('materiels')
                 .select('*')
                 .eq('id', idMateriel)
                 .single();
             setMateriel(matData);
 
-            const { data: vData } = await supabase
+            const {data: vData} = await supabase
                 .from('voitures')
                 .select('*')
                 .eq('id_ligne', params.id)
                 .eq('id_materiel', idMateriel)
-                .order('created_at', { ascending: false });
+                .order('created_at', {ascending: false});
             setVoitures(vData ?? []);
         };
 
@@ -76,6 +76,19 @@ export default function VisionTablePage() {
     }, [params.id, idMateriel]);
 
     if (!ligne || !materiel) return null;
+
+    let prefixeLigne = "";
+    if (ligne.nom) {
+        const firstLetter = ligne.nom.charAt(0).toUpperCase();
+        if (['A', 'B', 'C', 'D', 'E'].includes(firstLetter)) {
+            prefixeLigne = `RER ${firstLetter}`;
+        } else {
+            prefixeLigne = `Transilien ${firstLetter}`;
+        }
+    } else {
+        prefixeLigne = "";
+    }
+
 
     const filtered = voitures.filter((v) =>
         v.numero_voiture.toLowerCase().includes(search.toLowerCase())
@@ -87,7 +100,7 @@ export default function VisionTablePage() {
 
     return (
         <div className="max-w-5xl mx-auto py-10 px-4">
-            <VisionHeader ligne={ligne} />
+            <VisionHeader ligne={ligne} prefixeLigne={prefixeLigne}/>
 
             <h2 className="text-xl font-semibold text-white mb-6">
                 Voitures enregistrées – <span className="text-stone-300">{materiel.nom}</span>
@@ -99,14 +112,14 @@ export default function VisionTablePage() {
                     placeholder="Rechercher un numéro de voiture"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="flex-1 px-4 py-2 rounded bg-stone-800 text-white border border-stone-600 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-4 py-2 rounded bg-stone-800/20 text-stone-100 border border-stone-600 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                     onClick={handleAdd}
-                    className="p-2 rounded bg-blue-600 hover:bg-blue-700 transition-colors text-white"
+                    className="p-2 border border-stone-600 rounded bg-stone-800/20 hover:bg-stone-800 transition-colors text-white"
                     aria-label="Ajouter une voiture"
                 >
-                    <PlusIcon className="h-5 w-5" />
+                    <PlusIcon className="h-6 w-6"/>
                 </button>
             </div>
 

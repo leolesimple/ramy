@@ -19,6 +19,19 @@ async function AsyncVisionPage({ params }: { params: { id: string } }) {
 
     if (!ligne) notFound();
 
+    let prefixeLigne = "";
+    if (ligne.prefixe) {
+        prefixeLigne = ligne.prefixe;
+    } else if (ligne.nom) {
+        const firstLetter = ligne.nom.charAt(0).toUpperCase();
+        if (['A', 'B', 'C', 'D', 'E'].includes(firstLetter)) {
+            prefixeLigne = `RER ${firstLetter}`;
+        } else {
+            prefixeLigne = `Transilien ${firstLetter}`;
+        }
+
+    }
+
     const { data: liens, error } = await supabase
         .from('ligne_materiels')
         .select('materiel_id')
@@ -38,7 +51,7 @@ async function AsyncVisionPage({ params }: { params: { id: string } }) {
 
     return (
         <div className="max-w-5xl mx-auto py-10 px-4">
-            <VisionHeader ligne={ligne} />
+            <VisionHeader ligne={ligne} prefixeLigne={prefixeLigne} />
             <h2 className="text-xl font-semibold text-white mb-6">Choisissez un matériel</h2>
             {materiels && materiels.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">

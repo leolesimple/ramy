@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-import type { PageProps } from 'next'; // ← 👈 voici l'import important
+import type { PageProps } from 'next';
+import PageHeader from "@app/ui/Header"; // ← 👈 voici l'import important
 
 export default function NumVoiturePage({ params }: PageProps<{ id: string }>) {
     const [supabase, setSupabase] = useState<any>(null);
@@ -56,38 +57,72 @@ export default function NumVoiturePage({ params }: PageProps<{ id: string }>) {
         }
     };
 
+    let prefixeLigne = "";
+    useEffect(() => {
+        const fetchLigne = async () => {
+            if (!supabase) return;
+
+            const { data: ligne, error } = await supabase
+                .from('lignes')
+                .select('*')
+                .eq('id', idLigne)
+                .single();
+
+            if (error || !ligne) {
+                setError("Erreur lors de la récupération de la ligne.");
+                return;
+            }
+
+            if (ligne.prefixe) {
+                prefixeLigne = ligne.prefixe;
+            } else if (ligne.nom) {
+                const firstLetter = ligne.nom.charAt(0).toUpperCase();
+                if (['A', 'B', 'C', 'D', 'E'].includes(firstLetter)) {
+                    prefixeLigne = `RER ${firstLetter}`;
+                } else {
+                    prefixeLigne = `Transilien ${firstLetter}`;
+                }
+            }
+        };
+
+        fetchLigne();
+    }, [supabase, idLigne]);
+
     return (
-        <form
-            onSubmit={handleSubmit}
-            className="max-w-md mx-auto mt-10 p-6 bg-stone-900 border border-stone-700 rounded-lg text-white space-y-4"
-        >
-            <h1 className="text-xl font-bold">Ajout d&#39;une voiture</h1>
-
-            <input
-                type="text"
-                placeholder="Numéro de voiture"
-                value={numeroVoiture}
-                onChange={(e) => setNumeroVoiture(e.target.value)}
-                className="w-full p-2 rounded bg-stone-800 border border-stone-700"
-                required
-            />
-
-            <input
-                type="text"
-                placeholder="Code de porte (facultatif, ex : 1D)"
-                value={codePorte}
-                onChange={(e) => setCodePorte(e.target.value)}
-                className="w-full p-2 rounded bg-stone-800 border border-stone-700"
-            />
-
-            <button
-                type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
+        <>
+            <PageHeader
+            title={`Saisir la voiture`}
+            backHref="/lignes"/>
+            <form
+                onSubmit={handleSubmit}
+                className="max-w-md mx-auto mt-10 p-6 bg-stone-900 border border-stone-700 rounded-lg text-white space-y-4"
             >
-                Valider
-            </button>
+                <h1 className="text-xl font-bold">Ajout d&#39;une voiture</h1>
 
-            {error && <p className="text-red-400 text-sm">{error}</p>}
-        </form>
+                <input
+                    type="text"
+                    placeholder="Numéro de voiture"
+                    value={numeroVoiture}
+                    onChange={(e) => setNumeroVoiture(e.target.value)}
+                    className="w-full p-2 rounded bg-stone-800 border border-stone-700"
+                    required/>
+
+                <input
+                    type="text"
+                    placeholder="Code de porte (facultatif, ex : 1D)"
+                    value={codePorte}
+                    onChange={(e) => setCodePorte(e.target.value)}
+                    className="w-full p-2 rounded bg-stone-800 border border-stone-700"/>
+
+                <button
+                    type="submit"
+                    className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
+                >
+                    Valider
+                </button>
+
+                {error && <p className="text-red-400 text-sm">{error}</p>}
+            </form>
+        </>
     );
 }

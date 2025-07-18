@@ -20,7 +20,7 @@ export default function LoginPage() {
         const checkSession = async () => {
             const { data } = await supabase.auth.getSession();
             if (data.session) {
-                router.replace('/lignes');
+                router.replace('/menu');
             }
         };
         checkSession();
@@ -37,7 +37,7 @@ export default function LoginPage() {
         if (error) {
             setError(error.message);
         } else {
-            router.push('/lignes');
+            router.push('/menu');
         }
     };
 

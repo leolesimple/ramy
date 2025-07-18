@@ -14,7 +14,7 @@ export default async function Lignes() {
 
     return (
         <>
-            <PageHeader title="Choisir sa ligne" backHref="/" />
+            <PageHeader title="Ligne... | Ajout" backHref="/menu" />
             <div className="p-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                 {lignes?.map((ligne) => (
                     <LigneCard
