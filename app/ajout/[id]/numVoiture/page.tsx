@@ -1,24 +1,37 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import type { PageProps } from 'next';
-import PageHeader from "@app/ui/Header"; // ← 👈 voici l'import important
+import PageHeader from "@app/ui/Header";
 
-export default function NumVoiturePage({ params }: PageProps<{ id: string }>) {
-    const [supabase, setSupabase] = useState<any>(null);
+type Materiel = {
+    id: string;
+    nom: string;
+};
+
+type Ligne = {
+    id: string;
+    nom?: string;
+    prefixe?: string;
+};
+
+export default function NumVoiturePage() {
+    const params = useParams();
     const router = useRouter();
     const searchParams = useSearchParams();
 
+    const idLigne = params?.id ?? '';
+    const idMateriel = searchParams.get('idMateriel') ?? '';
+
+    const [supabase, setSupabase] = useState<any>(null);
     const [numeroVoiture, setNumeroVoiture] = useState('');
     const [codePorte, setCodePorte] = useState('');
     const [error, setError] = useState<string | null>(null);
-
-    const idLigne = params.id;
-    const idMateriel = searchParams.get('idMateriel');
+    const [loading, setLoading] = useState(true);
+    const [confirmation, setConfirmation] = useState(false);
+    const [materiel, setMateriel] = useState<Materiel | null>(null);
+    const [ligne, setLigne] = useState<Ligne | null>(null);
 
     useEffect(() => {
         const client = createBrowserClient(
@@ -28,76 +41,147 @@ export default function NumVoiturePage({ params }: PageProps<{ id: string }>) {
         setSupabase(client);
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
+    useEffect(() => {
         if (!supabase) return;
-
-        if (!idMateriel) {
-            setError("ID matériel manquant dans l'URL.");
+        if (!idMateriel || !idLigne) {
+            setError("ID matériel ou ligne manquant.");
+            setLoading(false);
             return;
         }
+
+        async function fetchData() {
+            try {
+                const { data: matData, error: errMat } = await supabase
+                    .from('materiels')
+                    .select('id, nom')
+                    .eq('id', idMateriel)
+                    .single();
+
+                if (errMat) throw errMat;
+                setMateriel(matData);
+
+                const { data: ligData, error: errLig } = await supabase
+                    .from('lignes')
+                    .select('id, nom')
+                    .eq('id', idLigne)
+                    .single();
+
+                if (errLig) throw errLig;
+                setLigne(ligData);
+
+                setLoading(false);
+            } catch (e: any) {
+                setError(e.message ?? 'Erreur chargement données');
+                setLoading(false);
+            }
+        }
+
+        fetchData();
+    }, [supabase, idMateriel, idLigne]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!supabase) return;
+        setError(null);
 
         if (!numeroVoiture.trim()) {
             setError("Le numéro de voiture est obligatoire.");
             return;
         }
 
-        const { error } = await supabase.from('voitures').insert({
-            id_ligne: idLigne,
-            id_materiel: idMateriel,
-            numero_voiture: numeroVoiture.trim(),
-            code_porte: codePorte.trim() || null,
-        });
+        try {
+            const { error: insertError } = await supabase.from('voitures').insert({
+                id_ligne: idLigne,
+                id_materiel: idMateriel,
+                numero_voiture: numeroVoiture.trim(),
+                code_porte: codePorte.trim() || null,
+            });
 
-        if (error) {
-            setError(error.message);
-        } else {
-            router.push('/vision');
+            if (insertError) throw insertError;
+
+            setConfirmation(true);
+        } catch (e: any) {
+            setError(e.message ?? 'Erreur insertion');
         }
     };
 
-    let prefixeLigne = "";
-    useEffect(() => {
-        const fetchLigne = async () => {
-            if (!supabase) return;
+    const handleDelete = async () => {
+        if (!supabase) return;
 
-            const { data: ligne, error } = await supabase
-                .from('lignes')
-                .select('*')
-                .eq('id', idLigne)
-                .single();
+        try {
+            const { error: delError } = await supabase
+                .from('voitures')
+                .delete()
+                .match({
+                    id_ligne: idLigne,
+                    id_materiel: idMateriel,
+                    numero_voiture: numeroVoiture.trim(),
+                });
 
-            if (error || !ligne) {
-                setError("Erreur lors de la récupération de la ligne.");
-                return;
-            }
+            if (delError) throw delError;
 
-            if (ligne.prefixe) {
-                prefixeLigne = ligne.prefixe;
-            } else if (ligne.nom) {
-                const firstLetter = ligne.nom.charAt(0).toUpperCase();
-                if (['A', 'B', 'C', 'D', 'E'].includes(firstLetter)) {
-                    prefixeLigne = `RER ${firstLetter}`;
-                } else {
-                    prefixeLigne = `Transilien ${firstLetter}`;
-                }
-            }
-        };
+            router.push('/ajout/' + idLigne + '?idMateriel=' + idMateriel);
+        } catch (e: any) {
+            setError(e.message ?? 'Erreur suppression');
+        }
+    };
 
-        fetchLigne();
-    }, [supabase, idLigne]);
+    //fetch ligne.nom from idLigne
+    // and set lignePrefixe based on the ligne.nom (nom beetween A and E = RER, else = Transilien)
+
+    const ligneNom = ligne?.nom || '';
+
+    let lignePrefixe;
+    if (ligneNom.startsWith('A') || ligneNom.startsWith('B') || ligneNom.startsWith('C') || ligneNom.startsWith('D') || ligneNom.startsWith('E')) {
+        lignePrefixe = 'RER ' + ligneNom;
+    } else {
+        lignePrefixe = 'Transilien ' + ligneNom;
+    }
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen text-stone-200 bg-stone-950">
+                Chargement...
+            </div>
+        );
+    }
+
+    if (confirmation) {
+        return (
+            <>
+                <PageHeader title="Confirmation d'ajout" backHref={`/ajout/${idLigne}?idMateriel=${idMateriel}`} />
+                <div className="max-w-md mx-auto mt-10 p-6 bg-stone-900 border border-stone-700 rounded-lg text-white space-y-4 text-center">
+                    <h2 className="text-xl font-bold mb-4">Voiture ajoutée avec succès !</h2>
+                    <p><strong>Ligne :</strong> {lignePrefixe ?? ligne?.nom ?? 'N/A'}</p>
+                    <p><strong>Matériel :</strong> {materiel?.nom ?? 'N/A'}</p>
+                    <p><strong>Numéro de voiture :</strong> {numeroVoiture}</p>
+
+                    <button
+                        onClick={() => router.push(`/vision/${idLigne}`)}
+                        className="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
+                    >
+                        Voir la vision
+                    </button>
+
+                    <button
+                        onClick={handleDelete}
+                        className="mt-2 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded w-full"
+                    >
+                        Supprimer cette entrée
+                    </button>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
-            <PageHeader
-            title={`Saisir la voiture`}
-            backHref="/lignes"/>
+            <PageHeader title="Saisir la voiture" backHref="/lignes" />
             <form
                 onSubmit={handleSubmit}
                 className="max-w-md mx-auto mt-10 p-6 bg-stone-900 border border-stone-700 rounded-lg text-white space-y-4"
             >
-                <h1 className="text-xl font-bold">Ajout d&#39;une voiture</h1>
+                <h1 className="text-xl font-bold">Ajout d'une voiture</h1>
 
                 <input
                     type="text"
@@ -105,14 +189,16 @@ export default function NumVoiturePage({ params }: PageProps<{ id: string }>) {
                     value={numeroVoiture}
                     onChange={(e) => setNumeroVoiture(e.target.value)}
                     className="w-full p-2 rounded bg-stone-800 border border-stone-700"
-                    required/>
+                    required
+                />
 
                 <input
                     type="text"
                     placeholder="Code de porte (facultatif, ex : 1D)"
                     value={codePorte}
                     onChange={(e) => setCodePorte(e.target.value)}
-                    className="w-full p-2 rounded bg-stone-800 border border-stone-700"/>
+                    className="w-full p-2 rounded bg-stone-800 border border-stone-700"
+                />
 
                 <button
                     type="submit"
