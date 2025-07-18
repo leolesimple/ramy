@@ -42,7 +42,3 @@ Ce projet est distribué sous la licence **GNU Affero General Public License v3.
 * Si vous mettez à disposition une version modifiée de ce projet sur un serveur (ex. : via un site web accessible publiquement), vous devez également rendre le code source de cette version accessible.
 
 Ce projet est destiné à un usage personnel ou non-commercial. Pour tout usage en production publique ou commercial, une autorisation préalable est requise.
-
----
-
-RAMY se veut simple, rapide à déployer ⚡, et adapté à un usage quotidien pour le suivi personnel des trajets ferroviaires 📈.
