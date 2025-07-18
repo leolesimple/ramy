@@ -34,7 +34,7 @@ L'objectif principal de RAMY est de proposer un outil simple, hébergeable sur u
 └── assets/          # Feuilles de style et scripts JS
 ```
 
-## 🧾 Licence
+## 🧾 Licence 
 
 Ce projet est distribué sous la licence **GNU Affero General Public License v3.0 (AGPL-3.0)**. Cela signifie que :
 
