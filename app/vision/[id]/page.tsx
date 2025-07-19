@@ -75,7 +75,7 @@ async function AsyncVisionPage({ params }: { params: { id: string } }) {
                     ))}
                 </div>
             ) : (
-                <p className="text-center text-stone-400">Aucun matériel trouvé pour cette ligne.</p>
+                <p className="text-center text-slate-400">Aucun matériel trouvé pour cette ligne.</p>
             )}
         </div>
     );

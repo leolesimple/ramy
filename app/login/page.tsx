@@ -46,7 +46,7 @@ export default function LoginPage() {
     return (
         <motion.form
             onSubmit={handleLogin}
-            className="flex flex-col gap-4 p-6 max-w-sm mx-auto mt-20 bg-stone-900 border border-stone-700 rounded-xl text-white shadow-xl"
+            className="flex flex-col gap-4 p-6 max-w-sm mx-auto mt-20 bg-stone-900 border border-stone-700 rounded-[36px] text-white shadow-xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}

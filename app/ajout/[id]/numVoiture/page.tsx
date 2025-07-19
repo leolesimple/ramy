@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import PageHeader from "@app/ui/Header";
 
@@ -76,7 +76,11 @@ export default function NumVoiturePage() {
             }
         }
 
-        fetchData();
+        fetchData().then(() => {
+            // Reset form fields after fetching data
+            setNumeroVoiture('');
+            setCodePorte('');
+        });
     }, [supabase, idMateriel, idLigne]);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -158,14 +162,14 @@ export default function NumVoiturePage() {
 
                     <button
                         onClick={() => router.push(`/vision/${idLigne}`)}
-                        className="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
+                        className="mt-6 w-full py-2 px-4 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-200 border border-blue-500/20 backdrop-blur-md transition-colors duration-200 font-medium"
                     >
                         Voir la vision
                     </button>
 
                     <button
                         onClick={handleDelete}
-                        className="mt-2 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded w-full"
+                        className="mt-2 w-full py-2 px-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-200 border border-red-500/20 backdrop-blur-md transition-colors duration-200 font-medium"
                     >
                         Supprimer cette entrée
                     </button>
@@ -199,10 +203,9 @@ export default function NumVoiturePage() {
                     onChange={(e) => setCodePorte(e.target.value)}
                     className="w-full p-2 rounded bg-stone-800 border border-stone-700"
                 />
-
                 <button
                     type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
+                    className="w-full py-2 px-4 rounded-xl bg-green-500/10 hover:bg-green-500/20 text-green-200 border border-green-500/20 backdrop-blur-md transition-colors duration-200 font-medium"
                 >
                     Valider
                 </button>
