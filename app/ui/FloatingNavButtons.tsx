@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
     HomeIcon,
-    PowerIcon, // Nouveau logout icon
+    PowerIcon,
 } from '@heroicons/react/24/outline';
 
 const buttons = [
@@ -14,7 +14,7 @@ const buttons = [
         label: 'Accueil menu',
         top: 'top-4',
         right: 'right-4',
-        style: 'bg-white/10 hover:bg-white/20 text-stone-200 border border-white/20', // vitre neutre
+        style: 'bg-white/10 hover:bg-white/20 text-stone-200 border border-white/20 dark:bg-stone-950/10 dark:text-stone-950 dark:border-stone-950/20', // vitre blanche
     },
     {
         href: '/logout',
@@ -22,7 +22,7 @@ const buttons = [
         label: 'Se déconnecter',
         top: 'top-20',
         right: 'right-4',
-        style: 'bg-red-500/10 hover:bg-red-500/20 text-red-200 border border-red-500/30', // vitre rouge
+        style: 'bg-red-500/10 hover:bg-red-500/20 text-red-200 border border-red-500/30 dark:bg-red-500/10 dark:text-red-200 dark:text-red-500 dark:border-red-950/20', // vitre rouge
     },
 ];
 

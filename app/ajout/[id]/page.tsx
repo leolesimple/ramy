@@ -3,6 +3,7 @@ import {createClient} from '@/lib/supabaseClient';
 import PageHeader from '@/app/ui/Header';
 import Card from '@/app/ui/Card';
 import Image from 'next/image';
+import ThemeToggle from "@app/ui/ThemeToggle";
 
 type PageProps = {
     params: Promise<{ id: string }>;
@@ -53,6 +54,7 @@ export default async function Page({params}: PageProps) {
 
     return (
         <main className="px-4 max-w-5xl mx-auto">
+            <ThemeToggle></ThemeToggle>
             <PageHeader
                 title={`Matériel | ${prefixeLigne}`}
                 backHref="/lignes"

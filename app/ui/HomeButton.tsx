@@ -20,13 +20,13 @@ export function HomeButton({ href, children, className }: ButtonProps) {
             <Link
                 href={href}
                 className={clsx(
-                    'relative inline-block mt-6 px-6 py-3 bg-white/10 text-stone-200 border border-white/20 rounded-xl backdrop-blur-md transition-colors duration-200 font-medium hover:bg-white/20',
+                    'relative inline-block mt-6 px-6 py-3 bg-white/10 text-stone-200 border border-white/20 rounded-xl backdrop-blur-md transition-colors duration-200 font-medium hover:bg-white/20 dark:bg-stone-950 dark:text-stone-50 dark:border-white/20 hover:dark:bg-stone-900',
                     className
                 )}
             >
                 {/* Glow border animée */}
                 <motion.span
-                    className="absolute inset-0 rounded-xl border-2 border-white/30 pointer-events-none"
+                    className="absolute inset-0 rounded-xl border-2 border-white/30 pointer-events-none dark:border-stone-50/30"
                     animate={{
                         opacity: [0.4, 0.8, 0.4],
                         boxShadow: [

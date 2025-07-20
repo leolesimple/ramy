@@ -15,7 +15,7 @@ export function VisionHeader({ligne, prefixeLigne}: VisionHeaderProps) {
     return (
         <div className="flex items-center gap-4 mb-8">
             <ArrowLeftIcon
-                className="w-6 h-6 text-white cursor-pointer hover:text-gray-300 transition-colors"
+                className="w-6 h-6 text-white cursor-pointer hover:text-gray-300 transition-colors dark:text-gray-700 dark:hover:text-gray-500"
                 onClick={() => window.history.back()}
             ></ArrowLeftIcon>
             <Image
@@ -26,7 +26,7 @@ export function VisionHeader({ligne, prefixeLigne}: VisionHeaderProps) {
                 className="w-12 h-12 object-contain"
                 priority
             />
-            <h1 className="text-2xl font-bold text-white">
+            <h1 className="text-2xl font-bold text-white dark:text-slate-900">
                 {prefixeLigne ? `${prefixeLigne}` : ''}
             </h1>
         </div>

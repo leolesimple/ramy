@@ -14,7 +14,7 @@ export default function PageHeader({ title, backHref }: PageHeaderProps) {
                 {backHref && (
                     <Link
                         href={backHref}
-                        className="text-stone-400 hover:text-white transition-colors"
+                        className="text-stone-400 hover:text-white transition-colors dark:text-stone-500 dark:hover:text-stone-300"
                         aria-label="Retour"
                     >
                         <ArrowLeftIcon className="w-6 h-6" />
@@ -22,7 +22,7 @@ export default function PageHeader({ title, backHref }: PageHeaderProps) {
                 )}
             </div>
             <div className="flex-1 flex justify-center">
-                <h1 className="text-xl sm:text-2xl font-bold text-center text-stone-100">
+                <h1 className="text-xl sm:text-2xl font-bold text-center text-stone-100 dark:text-stone-900">
                     {title}
                 </h1>
             </div>

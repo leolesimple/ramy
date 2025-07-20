@@ -1,9 +1,10 @@
 'use client';
 
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
-import { createBrowserClient } from '@supabase/ssr';
+import {useParams, useRouter, useSearchParams} from 'next/navigation';
+import React, {useEffect, useState} from 'react';
+import {createBrowserClient} from '@supabase/ssr';
 import PageHeader from "@app/ui/Header";
+import ThemeToggle from "@app/ui/ThemeToggle";
 
 type Materiel = {
     id: string;
@@ -51,7 +52,7 @@ export default function NumVoiturePage() {
 
         async function fetchData() {
             try {
-                const { data: matData, error: errMat } = await supabase
+                const {data: matData, error: errMat} = await supabase
                     .from('materiels')
                     .select('id, nom')
                     .eq('id', idMateriel)
@@ -60,7 +61,7 @@ export default function NumVoiturePage() {
                 if (errMat) throw errMat;
                 setMateriel(matData);
 
-                const { data: ligData, error: errLig } = await supabase
+                const {data: ligData, error: errLig} = await supabase
                     .from('lignes')
                     .select('id, nom')
                     .eq('id', idLigne)
@@ -94,7 +95,7 @@ export default function NumVoiturePage() {
         }
 
         try {
-            const { error: insertError } = await supabase.from('voitures').insert({
+            const {error: insertError} = await supabase.from('voitures').insert({
                 id_ligne: idLigne,
                 id_materiel: idMateriel,
                 numero_voiture: numeroVoiture.trim(),
@@ -113,7 +114,7 @@ export default function NumVoiturePage() {
         if (!supabase) return;
 
         try {
-            const { error: delError } = await supabase
+            const {error: delError} = await supabase
                 .from('voitures')
                 .delete()
                 .match({
@@ -153,8 +154,9 @@ export default function NumVoiturePage() {
     if (confirmation) {
         return (
             <>
-                <PageHeader title="Confirmation d'ajout" backHref={`/ajout/${idLigne}?idMateriel=${idMateriel}`} />
-                <div className="max-w-md mx-auto mt-10 p-6 bg-stone-900 border border-stone-700 rounded-lg text-white space-y-4 text-center">
+                <PageHeader title="Confirmation d'ajout" backHref={`/ajout/${idLigne}?idMateriel=${idMateriel}`}/>
+                <div
+                    className="max-w-md mx-auto mt-10 p-6 bg-stone-900 border border-stone-700 rounded-[36px] text-white shadow-xl dark:bg-stone-900/20 dark:text-stone-950 dark:border-stone-950/20 backdrop-blur-md space-y-4">
                     <h2 className="text-xl font-bold mb-4">Voiture ajoutée avec succès !</h2>
                     <p><strong>Ligne :</strong> {lignePrefixe ?? ligne?.nom ?? 'N/A'}</p>
                     <p><strong>Matériel :</strong> {materiel?.nom ?? 'N/A'}</p>
@@ -162,14 +164,14 @@ export default function NumVoiturePage() {
 
                     <button
                         onClick={() => router.push(`/vision/${idLigne}`)}
-                        className="mt-6 w-full py-2 px-4 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-200 border border-blue-500/20 backdrop-blur-md transition-colors duration-200 font-medium"
+                        className="mt-6 w-full py-2 px-4 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-200 border border-blue-500/20 backdrop-blur-md transition-colors duration-200 font-medium dark:bg-blue-300/20 dark:text-blue-800 dark:border-blue-800/20"
                     >
                         Voir la vision
                     </button>
 
                     <button
                         onClick={handleDelete}
-                        className="mt-2 w-full py-2 px-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-200 border border-red-500/20 backdrop-blur-md transition-colors duration-200 font-medium"
+                        className="mt-2 w-full py-2 px-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-200 border border-red-500/20 backdrop-blur-md transition-colors duration-200 font-medium dark:bg-red-300/20 dark:text-red-800 dark:border-red-800/20"
                     >
                         Supprimer cette entrée
                     </button>
@@ -180,10 +182,11 @@ export default function NumVoiturePage() {
 
     return (
         <>
-            <PageHeader title="Saisir la voiture" backHref="/lignes" />
+            <ThemeToggle></ThemeToggle>
+            <PageHeader title="Saisir la voiture" backHref="/lignes"/>
             <form
                 onSubmit={handleSubmit}
-                className="max-w-md mx-auto mt-10 p-6 bg-stone-900 border border-stone-700 rounded-lg text-white space-y-4"
+                className="max-w-md mx-auto mt-10 p-6 bg-stone-900 border border-stone-700 rounded-[36px] text-white shadow-xl dark:bg-stone-900/20 dark:text-stone-950 dark:border-stone-950/20 backdrop-blur-md space-y-4"
             >
                 <h1 className="text-xl font-bold">Ajout d'une voiture</h1>
 
@@ -192,7 +195,7 @@ export default function NumVoiturePage() {
                     placeholder="Numéro de voiture"
                     value={numeroVoiture}
                     onChange={(e) => setNumeroVoiture(e.target.value)}
-                    className="w-full p-2 rounded bg-stone-800 border border-stone-700"
+                    className="w-full p-2 rounded-xl bg-stone-800 border border-stone-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-stone-500/20 dark:border-stone-950/20 dark:focus:ring-blue-500"
                     required
                 />
 
@@ -201,11 +204,11 @@ export default function NumVoiturePage() {
                     placeholder="Code de porte (facultatif, ex : 1D)"
                     value={codePorte}
                     onChange={(e) => setCodePorte(e.target.value)}
-                    className="w-full p-2 rounded bg-stone-800 border border-stone-700"
+                    className="w-full p-2 rounded-xl bg-stone-800 border border-stone-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-stone-500/20 dark:border-stone-950/20 dark:focus:ring-blue-500"
                 />
                 <button
                     type="submit"
-                    className="w-full py-2 px-4 rounded-xl bg-green-500/10 hover:bg-green-500/20 text-green-200 border border-green-500/20 backdrop-blur-md transition-colors duration-200 font-medium"
+                    className="w-full py-2 px-4 rounded-xl bg-green-500/10 hover:bg-green-500/20 text-green-200 border border-green-500/20 backdrop-blur-md transition-colors duration-200 font-medium dark:bg-green-300/20 dark:text-green-800 dark:border-green-800/20"
                 >
                     Valider
                 </button>
