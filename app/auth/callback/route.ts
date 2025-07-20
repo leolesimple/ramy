@@ -5,26 +5,25 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request) {
     const requestUrl = new URL(request.url);
     const code = requestUrl.searchParams.get('code');
-    const cookieStore = await cookies(); // ✅ Ne pas utiliser await ici
+    const cookieStore = await cookies();
 
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
         {
             cookies: {
-                get(name) {
-                    return cookieStore.get(name)?.value;
+                getAll() {
+                    return cookieStore.getAll();
                 },
-                set(name, value, options) {
-                    cookieStore.set({
-                        name,
-                        value,
-                        ...options,
-                        maxAge: 60 * 60 * 24 * 90, // 90 jours
+                setAll(cookies) {
+                    cookies.forEach(({ name, value, options }) => {
+                        cookieStore.set({
+                            name,
+                            value,
+                            ...options,
+                            maxAge: options?.maxAge ?? 60 * 60 * 24 * 90,
+                        });
                     });
-                },
-                remove(name) {
-                    cookieStore.delete(name);
                 },
             },
         }

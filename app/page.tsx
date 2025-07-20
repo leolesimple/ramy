@@ -25,7 +25,7 @@ export default function MenuPage() {
 
     return (
         <div
-            className="flex flex-col h-full items-center justify-center bg-stone-950 text-stone-200 font-sans antialiased px-4 text-center space-y-8 overflow-hidden">
+            className="flex flex-col h-full items-center justify-center bg-stone-950 text-stone-200 font-sans antialiased px-4 text-center space-y-8 overflow-hidden dark:bg-stone-50 dark:text-stone-950">
             <motion.h2
                 className="text-4xl font-bold max-w-md"
                 initial={{opacity: 0, y: 10}}

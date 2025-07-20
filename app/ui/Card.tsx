@@ -51,13 +51,9 @@ export default function Card({ color, children }: CardProps) {
     return (
         <div
             className={clsx(
-                'rounded-2xl p-4 text-white text-center font-bold flex flex-col items-center justify-center h-32 shadow-md transition-transform active:scale-95 border backdrop-blur-xl',
+                'rounded-2xl p-4 text-center font-bold flex flex-col items-center justify-center h-32 transition-transform active:scale-95 border backdrop-blur-xl',
+                'bg-stone-900/30 dark:bg-stone-950/10 border-stone-100/20 dark:border-stone-950/20 text-stone-200 dark:text-stone-50',
             )}
-            style={{
-                backgroundColor: color,
-                boxShadow: `0 0 0.6rem 0.2rem ${color}`,
-                borderColor: color,
-            }}
         >
             {children}
         </div>

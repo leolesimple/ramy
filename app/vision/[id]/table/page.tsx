@@ -102,8 +102,10 @@ export default function VisionTablePage() {
         <div className="max-w-5xl mx-auto py-10 px-4">
             <VisionHeader ligne={ligne} prefixeLigne={prefixeLigne}/>
 
-            <h2 className="text-xl font-semibold text-white mb-6">
-                Voitures enregistrées – <span className="text-stone-300">{materiel.nom}</span>
+            <h2 className="text-xl font-semibold text-white mb-6 dark:text-slate-700">
+                Voitures enregistrées – <span className="text-slate-300 dark:text-slate-900">
+                    {materiel.nom}
+                </span>
             </h2>
 
             <div className="flex items-center gap-2 mb-6">
@@ -112,11 +114,11 @@ export default function VisionTablePage() {
                     placeholder="Rechercher un numéro de voiture"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="flex-1 px-4 py-2 rounded bg-stone-800/20 text-stone-100 border border-stone-600 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-4 py-2 rounded-xl bg-slate-800/20 text-slate-100 border border-slate-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-800/10 dark:text-slate-900 dark:border-slate-400 dark:placeholder:text-slate-500"
                 />
                 <button
                     onClick={handleAdd}
-                    className="p-2 border border-stone-600 rounded bg-stone-800/20 hover:bg-stone-800 transition-colors text-white"
+                    className="p-2 bg-slate-800/20 rounded-xl text-slate-100 border border-slate-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-800/10 dark:text-slate-900 dark:border-slate-400 dark:placeholder:text-slate-500"
                     aria-label="Ajouter une voiture"
                 >
                     <PlusIcon className="h-6 w-6"/>
@@ -125,9 +127,9 @@ export default function VisionTablePage() {
 
             {filtered.length > 0 ? (
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse text-sm text-white">
+                    <table className="w-full text-left border-collapse text-sm text-slate-50 dark:text-slate-900">
                         <thead>
-                        <tr className="border-b border-stone-700">
+                        <tr className="border-b border-slate-700 dark:border-slate-600">
                             <th className="py-2 pr-4">Numéro</th>
                             <th className="py-2 pr-4">Porte</th>
                             <th className="py-2">Date</th>
@@ -135,10 +137,10 @@ export default function VisionTablePage() {
                         </thead>
                         <tbody>
                         {filtered.map((v) => (
-                            <tr key={v.id} className="border-b border-stone-800">
-                                <td className="py-2 pr-4">{v.numero_voiture}</td>
+                            <tr key={v.id} className="border-b border-slate-800 dark:border-slate-700 hover:bg-slate-800/20 transition-colors dark:hover:bg-slate-300/30">
+                                <td className="py-2 pr-4 font-bold">{v.numero_voiture}</td>
                                 <td className="py-2 pr-4">{v.code_porte || '—'}</td>
-                                <td className="py-2 text-stone-400">
+                                <td className="py-2 text-slate-400 dark:text-slate-600">
                                     {new Date(v.created_at).toLocaleString('fr-FR')}
                                 </td>
                             </tr>
@@ -147,7 +149,7 @@ export default function VisionTablePage() {
                     </table>
                 </div>
             ) : (
-                <p className="text-stone-400 text-center">Aucune voiture trouvée avec ce numéro.</p>
+                <p className="text-slate-400 text-center">Aucune voiture trouvée avec ce numéro.</p>
             )}
         </div>
     );

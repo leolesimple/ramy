@@ -1,7 +1,8 @@
 // app/layout.tsx
 import './globals.css';
 import type {Metadata} from 'next';
-import BackHomeButton from "@app/ui/BackHomeButton";
+import ClientLayoutWrapper from './ui/ClientLayoutWrapper';
+import {ThemeProvider} from './context/ThemeProvider';
 
 export const metadata: Metadata = {
     title: 'RAMY',
@@ -11,9 +12,10 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: { children: React.ReactNode }) {
     return (
         <html lang="fr">
-        <body className="min-h-screen bg-stone-950 text-stone-200 font-sans antialiased flex flex-col">
-        <BackHomeButton />
-        <main className="px-4 pt-8 pb-10 h-screen">{children}</main>
+        <body className="min-h-screen bg-stone-950 text-stone-200 font-sans antialiased flex flex-col dark:bg-stone-50 dark:text-stone-950">
+        <ThemeProvider>
+            <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+        </ThemeProvider>
         </body>
         </html>
     );
