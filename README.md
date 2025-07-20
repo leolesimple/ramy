@@ -1,44 +1,100 @@
 # RAMY
 
-**RAMY** est une application web légère 🚆 permettant de consigner et consulter les trajets ferroviaires personnels. Développée comme une alternative autonome à Notion, elle permet une saisie rapide et structurée des informations liées à chaque trajet effectué.
+**RAMY** est une application web minimaliste 🚆 pensée pour consigner rapidement les voitures de trains du réseau francilien que j’ai emprunté. Développée pour une saisie rapide, mobile first et fluide, elle remplace avantageusement les bases de données artisanales dans Notion.
 
-Conçue avant tout pour une utilisation mobile 📱, RAMY permet de noter ses trajets en quelques secondes, directement depuis le quai ou une rame, sans distraction ni surcharge.
+> Chaque trajet est lié à une **ligne** et un **matériel roulant**, avec la possibilité de préciser le **numéro de voiture** et un éventuel **code porte**.
+
+---
 
 ## 🎯 Objectif du projet
 
-L'objectif principal de RAMY est de proposer un outil simple, hébergeable sur un serveur web classique, pour permettre un suivi personnalisé des rames empruntées au quotidien.
+Offrir un outil personnel, rapide à utiliser depuis le quai ou en marche, pour archiver avec précision les voitures utilisées. L’interface permet aussi de **visualiser les trajets passés** par ligne et matériel.
 
-## ✨ Fonctionnalités principales
+Le projet est développé comme un **outil personnel** auto-hébergeable sur un serveur Next.js, avec une UI inspirée d’Apple / Linear.
 
-* 🏠 Page d'accueil listant les lignes de train (RER, Transilien, etc.)
-* 📝 Formulaire unique pour l'ajout de trajets, avec préremplissage du matériel selon la ligne sélectionnée
-* 📋 Possibilité d'accéder à un tableau récapitulatif de tous les trajets enregistrés
-* ✅ Retour visuel après chaque soumission validée
+---
 
-## 🛠️ Technologies utilisées
+## ✨ Fonctionnalités
 
-* **Frontend** : HTML, CSS (vanilla), JavaScript
-* **Backend** : PHP (sans framework)
-* **Base de données** : SQLite
-* **Hébergement** : Compatible avec la plupart des hébergements web classiques
+* 🏠 Menu d’accueil animé avec framer-motion
+* 🔐 Authentification via Supabase
+* 🚆 Sélection d’une ligne, puis d’un matériel
+* ➕ Ajout d’un trajet avec numéro de voiture et code porte (facultatif)
+* 📊 Vue en tableau filtrée par ligne et matériel
+* 💾 Données stockées dans Supabase
+* 📱 Design mobile first, utilisable à une main
+* 🌓 Branche en cours pour support light/dark mode
 
-## 🗂 Architecture du projet
+---
+
+## 🧱 Structure de l’app
 
 ```
-/
-├── index.php        # Accueil avec les lignes de train
-├── add.php          # Formulaire d'ajout générique
-├── submit.php       # Traitement du formulaire et insertion en base
-├── view.php         # Visualisation des trajets enregistrés
-├── db.sqlite        # Base de données SQLite locale
-└── assets/          # Feuilles de style et scripts JS
+app/
+├── ajout/                  # Ajout d’une voiture à un trajet
+│   └── [id]/               # Ligne sélectionnée
+│       ├── page.tsx        # Choix du matériel roulant
+│       └── numVoiture/     # Formulaire d’ajout
+├── auth/                   # Auth Supabase
+│   └── callback/
+├── lignes/                 # Liste de toutes les lignes
+├── login/                  # Page de connexion
+├── logout/                 # Déconnexion
+├── menu/                   # Accueil stylisé
+├── vision/                 # Vue tableau des trajets
+│   └── [id]/               # Ligne sélectionnée
+│       └── table/
+├── ui/                     # Composants UI réutilisables
+│   ├── Button.tsx
+│   ├── HomeButton.tsx
+│   ├── LoginButton.tsx
+│   ├── VisionCard.tsx
+│   ├── VisionHeader.tsx
+│   └── etc.
+├── layout.tsx              # Layout global
+├── globals.css             # Styles globaux
+└── page.tsx                # Redirection auto
 ```
 
-## 🧾 Licence 
+---
 
-Ce projet est distribué sous la licence **GNU Affero General Public License v3.0 (AGPL-3.0)**. Cela signifie que :
+## 🛠️ Stack technique
 
-* Vous êtes libre de consulter, utiliser, modifier et redistribuer le code source.
-* Si vous mettez à disposition une version modifiée de ce projet sur un serveur (ex. : via un site web accessible publiquement), vous devez également rendre le code source de cette version accessible.
+* **Framework** : [Next.js 15](https://nextjs.org/)
+* **Auth & BDD** : [Supabase](https://supabase.com/)
+* **UI Animée** : [framer-motion](https://www.framer.com/motion/)
+* **Composants** : Heroicons, TailwindCSS-like style customisé
+* **Hébergement** : Vercel
 
-Ce projet est destiné à un usage personnel ou non-commercial. Pour tout usage en production publique ou commercial, une autorisation préalable est requise.
+---
+
+## 🚀 Déploiement
+
+Compatible avec **Vercel** sans configuration spécifique (repose sur `app/` avec App Router).
+Assurez-vous que les variables d’environnement suivantes sont bien définies :
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```
+
+---
+
+## 🧾 Licence
+
+Ce projet est sous **licence AGPL-3.0** :
+
+* ✅ Code librement modifiable et redistribuable
+* 📢 Obligation de publier les sources si vous déployez une version modifiée publiquement
+* 🚫 Pas d’usage commercial sans accord explicite
+
+---
+
+## 📌 À venir
+
+* [x] Animation de l’accueil
+* [x] Composant `HomeButton` flottant
+* [x] Login designé avec framer-motion
+* [ ] Mode clair 🌞
+* [ ] Export CSV
+* [ ] Statistiques de fréquence d’utilisation par ligne
