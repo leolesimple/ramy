@@ -1,6 +1,4 @@
-import BackHomeButton from "@app/ui/BackHomeButton";
 import {ThemeProvider} from "@app/context/ThemeProvider";
-import ClientLayoutWrapper from "@app/ui/ClientLayoutWrapper";
 import ThemeToggle from "@app/ui/ThemeToggle";
 
 export default function VisionLayout({ children }: { children: React.ReactNode }) {
