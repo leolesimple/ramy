@@ -166,14 +166,14 @@ export default function NumVoiturePage() {
                         onClick={() => router.push(`/vision/${idLigne}`)}
                         className="mt-6 w-full py-2 px-4 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-200 border border-blue-500/20 backdrop-blur-md transition-colors duration-200 font-medium dark:bg-blue-300/20 dark:text-blue-800 dark:border-blue-800/20"
                     >
-                        Voir la vision
+                        Voir l'historique
                     </button>
 
                     <button
                         onClick={handleDelete}
                         className="mt-2 w-full py-2 px-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-200 border border-red-500/20 backdrop-blur-md transition-colors duration-200 font-medium dark:bg-red-300/20 dark:text-red-800 dark:border-red-800/20"
                     >
-                        Supprimer cette entrée
+                        Supprimer
                     </button>
                 </div>
             </>
