@@ -95,6 +95,7 @@ Ce projet est sous **licence AGPL-3.0** :
 * [x] Animation de l’accueil
 * [x] Composant `HomeButton` flottant
 * [x] Login designé avec framer-motion
-* [ ] Mode clair 🌞
+* [x] Mode clair 🌞
+* [ ] Nouvelle UI
 * [ ] Export CSV
 * [ ] Statistiques de fréquence d’utilisation par ligne
