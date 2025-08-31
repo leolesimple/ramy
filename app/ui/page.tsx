@@ -3,8 +3,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
-import { motion } from 'framer-motion';
-import { HomeButton } from '@app/ui/HomeButton';
 
 export default function Page() {
     const router = useRouter();

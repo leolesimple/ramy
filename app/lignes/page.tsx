@@ -1,7 +1,7 @@
 import {createClient} from '@/lib/supabaseClient';
 import {LigneCard} from '@app/ui/Card';
 import PageHeader from '@app/ui/Header';
-import ThemeToggle from "@app/ui/ThemeToggle";
+import {ThemeColorMeta} from "@app/context/ThemeColorMeta";
 
 export default async function Lignes() {
     const supabase = await createClient();
@@ -15,8 +15,7 @@ export default async function Lignes() {
 
     return (
         <>
-            <ThemeToggle></ThemeToggle>
-            <PageHeader title="Ligne... | Ajout" backHref="/menu" />
+            <PageHeader title="Ajouter un train" backHref="/menu" />
             <div className="p-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                 {lignes?.map((ligne) => (
                     <LigneCard

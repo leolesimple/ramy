@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import {ArrowLeftCircleIcon} from '@heroicons/react/24/solid';
 import Link from 'next/link';
 
 type PageHeaderProps = {
@@ -14,15 +14,16 @@ export default function PageHeader({ title, backHref }: PageHeaderProps) {
                 {backHref && (
                     <Link
                         href={backHref}
-                        className="text-stone-400 hover:text-white transition-colors dark:text-stone-500 dark:hover:text-stone-300"
+                        className="text-sky-600 hover:text-sky-400 transition-colors duration-200"
                         aria-label="Retour"
                     >
-                        <ArrowLeftIcon className="w-6 h-6" />
+                        <ArrowLeftCircleIcon className="w-10 h-10" />
                     </Link>
                 )}
             </div>
             <div className="flex-1 flex justify-center">
-                <h1 className="text-xl sm:text-2xl font-bold text-center text-stone-100 dark:text-stone-900">
+                <h1 className="text-xl sm:text-2xl font-bold text-center text-stone-100 dark:text-stone-900 tracking-tight
+">
                     {title}
                 </h1>
             </div>
