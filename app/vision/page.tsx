@@ -17,7 +17,7 @@ export default async function VisionPage() {
 
     return (
         <>
-            <PageHeader title="Choisir... | Vision" backHref="/menu"/>
+            <PageHeader title="Consulter l'historique" backHref="/menu"/>
             <div className="p-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                 {lignes.map((ligne) => (
                     <VisionLigneCard

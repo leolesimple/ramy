@@ -46,7 +46,7 @@ export default function LoginPage() {
     return (
         <motion.form
             onSubmit={handleLogin}
-            className="flex flex-col gap-4 p-6 max-w-sm mx-auto mt-20 bg-stone-900 border border-stone-700 rounded-[36px] text-white shadow-xl dark:bg-stone-900/20 dark:text-stone-950 dark:border-stone-950/20 backdrop-blur-md"
+            className="flex flex-col gap-4 p-6 max-w-sm mx-auto mt-20 text-white dark:text-stone-950"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -65,7 +65,7 @@ export default function LoginPage() {
                 placeholder="Adresse email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="p-3 bg-stone-800 border border-stone-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all dark:bg-stone-950/20 dark:border-stone-950/20 dark:focus:ring-blue-500"
+                className="w-full p-2 rounded-xl bg-stone-800 border-[1px] border-stone-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-white dark:border-stone-950/20 dark:focus:ring-blue-500"
                 required
             />
 
@@ -74,7 +74,7 @@ export default function LoginPage() {
                 placeholder="Mot de passe"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="p-3 bg-stone-800 border border-stone-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all dark:bg-stone-950/20 dark:border-stone-950/20 dark:focus:ring-blue-500"
+                className="w-full p-2 rounded-xl bg-stone-800 border-[1px] border-stone-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-white dark:border-stone-950/20 dark:focus:ring-blue-500"
                 required
             />
 

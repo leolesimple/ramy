@@ -23,7 +23,12 @@ Le projet est développé comme un **outil personnel** auto-hébergeable sur un 
 * 📊 Vue en tableau filtrée par ligne et matériel
 * 💾 Données stockées dans Supabase
 * 📱 Design mobile first, utilisable à une main
-* 🌓 Branche en cours pour support light/dark mode
+* 🌓 Support light/dark mode
+* 🎉 Nouvelle UI encore plus pratique et agréable (>= v0.5.0)
+
+> [!IMPORTANT]  
+> L'app web sort en version stable **v1.0**, ce mercredi 4 septembre. 
+> Elle est désormais pleinement fonctionnelle et prête pour un usage quotidien.
 
 ---
 
@@ -95,6 +100,7 @@ Ce projet est sous **licence AGPL-3.0** :
 * [x] Animation de l’accueil
 * [x] Composant `HomeButton` flottant
 * [x] Login designé avec framer-motion
-* [ ] Mode clair 🌞
+* [x] Mode clair 🌞
+* [x] Nouvelle UI
 * [ ] Export CSV
 * [ ] Statistiques de fréquence d’utilisation par ligne
