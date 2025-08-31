@@ -51,7 +51,7 @@ async function AsyncVisionPage({ params }: { params: { id: string } }) {
 
     return (
         <div className="max-w-5xl mx-auto py-10 px-4">
-            <VisionHeader ligne={ligne} prefixeLigne={prefixeLigne} />
+            <VisionHeader ligne={ligne} prefixeLigne={prefixeLigne} backHref={"/vision"} />
             <h2 className="text-xl font-semibold text-white mb-6 dark:text-slate-900">
                 Choisissez un matériel
             </h2>
@@ -63,7 +63,7 @@ async function AsyncVisionPage({ params }: { params: { id: string } }) {
                             href={`/vision/${params.id}/table?idMateriel=${mat.id}`}
                             className="group relative"
                         >
-                            <div className="rounded-2xl p-4 text-white text-center font-bold flex flex-col items-center justify-center h-36 border border-white/10 bg-white/5 backdrop-blur-xl transition-transform active:scale-95 dark:bg-slate-800/20 dark:text-slate-200 dark:border-slate-400">
+                            <div className="w-full rounded-2xl p-4 text-white text-center font-bold flex flex-col items-center justify-center h-36 border-white/10 bg-white/5 backdrop-blur-xl transition-transform active:scale-95 dark:bg-slate-800/20 dark:text-slate-200 dark:border-slate-400">
                                 <Image
                                     src={mat.icon}
                                     alt={mat.nom}

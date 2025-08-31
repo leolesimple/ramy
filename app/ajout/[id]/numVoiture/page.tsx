@@ -154,24 +154,23 @@ export default function NumVoiturePage() {
     if (confirmation) {
         return (
             <>
-                <PageHeader title="Confirmation d'ajout" backHref={`/ajout/${idLigne}?idMateriel=${idMateriel}`}/>
+                <PageHeader title="Voiture ajoutée !" backHref={`/ajout/${idLigne}?idMateriel=${idMateriel}`}/>
                 <div
-                    className="max-w-md mx-auto mt-10 p-6 bg-stone-900 border border-stone-700 rounded-[36px] text-white shadow-xl dark:bg-stone-900/20 dark:text-stone-950 dark:border-stone-950/20 backdrop-blur-md space-y-4">
-                    <h2 className="text-xl font-bold mb-4">Voiture ajoutée avec succès !</h2>
+                    className="max-w-md mx-auto mt-10 p-6 text-white dark:text-stone-950 backdrop-blur-md space-y-1">
                     <p><strong>Ligne :</strong> {lignePrefixe ?? ligne?.nom ?? 'N/A'}</p>
                     <p><strong>Matériel :</strong> {materiel?.nom ?? 'N/A'}</p>
                     <p><strong>Numéro de voiture :</strong> {numeroVoiture}</p>
 
                     <button
-                        onClick={() => router.push(`/vision/${idLigne}`)}
-                        className="mt-6 w-full py-2 px-4 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-200 border border-blue-500/20 backdrop-blur-md transition-colors duration-200 font-medium dark:bg-blue-300/20 dark:text-blue-800 dark:border-blue-800/20"
+                        onClick={() => router.push(`/vision/${idLigne}/table?idMateriel=${idMateriel}`)}
+                        className="mt-6 w-full py-2 px-4 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 text-blue-100 transition-colors duration-400 font-medium dark:bg-blue-300/40 dark:text-blue-900 dark:hover:bg-blue-400/40"
                     >
                         Voir l'historique
                     </button>
 
                     <button
                         onClick={handleDelete}
-                        className="mt-2 w-full py-2 px-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-200 border border-red-500/20 backdrop-blur-md transition-colors duration-200 font-medium dark:bg-red-300/20 dark:text-red-800 dark:border-red-800/20"
+                        className="mt-2 w-full py-2 px-4 rounded-xl bg-red-500/20 hover:bg-red-500/40 text-red-100 transition-colors duration-400 font-medium dark:bg-red-300/40 dark:text-red-900 dark:hover:bg-red-400/40"
                     >
                         Supprimer
                     </button>
@@ -182,38 +181,53 @@ export default function NumVoiturePage() {
 
     return (
         <>
-            <ThemeToggle></ThemeToggle>
-            <PageHeader title="Saisir la voiture" backHref="/lignes"/>
+            <PageHeader title="Ajouter un train" backHref={`/ajout/${idLigne}?idMateriel=${idMateriel}`}/>
             <form
                 onSubmit={handleSubmit}
-                className="max-w-md mx-auto mt-10 p-6 bg-stone-900 border border-stone-700 rounded-[36px] text-white shadow-xl dark:bg-stone-900/20 dark:text-stone-950 dark:border-stone-950/20 backdrop-blur-md space-y-4"
+                className="max-w-md mx-auto mt-10 p-6 text-white dark:text-stone-950 backdrop-blur-md space-y-4"
             >
-                <h1 className="text-xl font-bold">Ajout d'une voiture</h1>
+                <div className="mb-4">
+                    <label
+                        htmlFor="numero-voiture"
+                        className="block mb-1 font-medium text-stone-400 dark:text-stone-800"
+                    >
+                        Numéro de voiture
+                    </label>
+                    <input
+                        id="numero-voiture"
+                        type="text"
+                        placeholder="3519, 01H, 040K"
+                        value={numeroVoiture}
+                        onChange={(e) => setNumeroVoiture(e.target.value)}
+                        className="w-full p-2 rounded-xl bg-stone-800 border-[1px] border-stone-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-white dark:border-stone-950/20 dark:focus:ring-blue-500"
+                        required
+                    />
+                </div>
 
-                <input
-                    type="text"
-                    placeholder="Numéro de voiture"
-                    value={numeroVoiture}
-                    onChange={(e) => setNumeroVoiture(e.target.value)}
-                    className="w-full p-2 rounded-xl bg-stone-800 border border-stone-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-stone-500/20 dark:border-stone-950/20 dark:focus:ring-blue-500"
-                    required
-                />
-
-                <input
-                    type="text"
-                    placeholder="Code de porte (facultatif, ex : 1D)"
-                    value={codePorte}
-                    onChange={(e) => setCodePorte(e.target.value)}
-                    className="w-full p-2 rounded-xl bg-stone-800 border border-stone-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-stone-500/20 dark:border-stone-950/20 dark:focus:ring-blue-500"
-                />
+                <div className="mb-4">
+                    <label
+                        htmlFor="code-porte"
+                        className="block mb-1 font-medium text-stone-400 dark:text-stone-800"
+                    >
+                        Porte
+                    </label>
+                    <input
+                        id="code-porte"
+                        type="text"
+                        placeholder="1D, d3"
+                        value={codePorte}
+                        onChange={(e) => setCodePorte(e.target.value)}
+                        className="w-full p-2 rounded-xl bg-stone-800 border-[1px] border-stone-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-white dark:border-stone-950/20 dark:focus:ring-blue-500"
+                    />
+                </div>
                 <button
                     type="submit"
-                    className="w-full py-2 px-4 rounded-xl bg-green-500/10 hover:bg-green-500/20 text-green-200 border border-green-500/20 backdrop-blur-md transition-colors duration-200 font-medium dark:bg-green-300/20 dark:text-green-800 dark:border-green-800/20"
+                    className="w-full py-2 px-4 rounded-xl bg-green-500/20 hover:bg-green-500/30 text-green-200 backdrop-blur-md transition-colors duration-300 dark:bg-green-400/30 dark:text-green-800"
                 >
                     Valider
                 </button>
 
-                {error && <p className="text-red-400 text-sm">{error}</p>}
+                {error && <p className="text-red-400 text-sm">Erreur :  {error}</p>}
             </form>
         </>
     );

@@ -17,7 +17,7 @@ export default async function Page({params}: PageProps) {
         data: {user},
     } = await supabase.auth.getUser();
     if (!user) {
-        return notFound(); // Middleware devrait t’y ramener, sécurité double
+        return notFound();
     }
     const ligneId = id;
     // Récupère la ligne
@@ -53,13 +53,12 @@ export default async function Page({params}: PageProps) {
     }
 
     return (
-        <main className="px-4 max-w-5xl mx-auto">
-            <ThemeToggle></ThemeToggle>
+        <main className="px-4 mx-auto">
             <PageHeader
-                title={`Matériel | ${prefixeLigne}`}
+                title={`Ajouter un train | ${prefixeLigne}`}
                 backHref="/lignes"
             />
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-[1140px] mx-auto pb-8">
                 {materiels.map((mat) => (
                     <a
                         key={mat.id}

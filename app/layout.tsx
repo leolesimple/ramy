@@ -3,6 +3,7 @@ import './globals.css';
 import type {Metadata} from 'next';
 import ClientLayoutWrapper from './ui/ClientLayoutWrapper';
 import {ThemeProvider} from './context/ThemeProvider';
+import { ThemeColorMeta } from "./context/ThemeColorMeta";
 import type { Viewport } from 'next'
 
 export const metadata: Metadata = {
@@ -10,10 +11,6 @@ export const metadata: Metadata = {
     description: 'Votre journal personnel des trains',
     manifest: '/manifest.json',
 };
-
-export const viewport: Viewport = {
-    themeColor: '#e7e5e4',
-}
 
 export default function RootLayout({children}: { children: React.ReactNode }) {
     return (
@@ -25,8 +22,9 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
             <link rel="apple-touch-icon" href="/ios/180.png" />
             <title>RAMY</title>
         </head>
-        <body className="min-h-screen bg-stone-950 text-stone-200 font-sans antialiased flex flex-col dark:bg-stone-50 dark:text-stone-950">
+        <body className="min-h-screen bg-stone-950 text-stone-200 font-sans antialiased flex flex-col dark:bg-stone-50 dark:text-stone-950 transition-colors duration-500">
         <ThemeProvider>
+            <ThemeColorMeta />
             <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
         </ThemeProvider>
         </body>

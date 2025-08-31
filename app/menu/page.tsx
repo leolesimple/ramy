@@ -4,16 +4,16 @@ import {motion} from 'framer-motion';
 import {Button} from '../ui/Button';
 import { useTheme } from '@app/context/ThemeProvider';
 import ThemeToggle from "@app/ui/ThemeToggle";
+import { BackwardIcon, PlusIcon } from '@heroicons/react/24/solid'
 
 export default function MenuPage() {
     return (
         <>
-            <ThemeToggle></ThemeToggle>
             <motion.div
                 className="flex flex-col h-full items-center justify-center font-sans antialiased px-4 text-center space-y-2 overflow-hidden"
                 initial={{opacity: 0, y: 20}}
                 animate={{opacity: 1, y: 0}}
-                transition={{duration: 0.6, ease: 'easeOut'}}
+                transition={{duration: 0.4, ease: 'easeOut'}}
             >
                 <motion.h2
                     className="text-4xl font-bold max-w-md"
@@ -29,19 +29,26 @@ export default function MenuPage() {
                     className="text-2xl font-light max-w-xs"
                     initial={{opacity: 0, y: 10}}
                     animate={{opacity: 1, y: 0}}
-                    transition={{duration: 0.6, delay: 0.2, ease: 'easeOut'}}
+                    transition={{duration: 0.6, delay: 0, ease: 'easeOut'}}
                 >
                     Choisissez une action à effectuer :
                 </motion.h3>
 
                 <motion.div
                     className="flex gap-4 w-full max-w-fit mx-auto"
-                    initial={{opacity: 0, y: 10}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{duration: 0.6, delay: 0.4, ease: 'easeOut'}}
+                    initial={{opacity: 0, y: 10, scale: 0.9}}
+                    animate={{opacity: 1, y: 0, scale: 1}}
+                    transition={{duration: 0.6, delay: 0.2, ease: 'easeOut'}}
                 >
-                    <Button href="/lignes">Ajout</Button>
-                    <Button href="/vision">Vision</Button>
+                    <Button href="/lignes">
+                        <PlusIcon className="w-5 h-5 inline-block mr-1 mb-1 text-stone-300 dark:text-stone-600"></PlusIcon>
+                        Ajout
+                    </Button>
+                    <Button href="/vision">
+                        <BackwardIcon className="w-5 h-5 inline-block mr-1 mb-1 text-stone-300 dark:text-stone-600">
+                        </BackwardIcon>
+                        Vision
+                    </Button>
                 </motion.div>
             </motion.div>
         </>
