@@ -1,13 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-import {HomeIcon, PowerIcon,} from '@heroicons/react/24/outline';
+import {HomeIcon, PowerIcon, PlusIcon, EyeIcon} from '@heroicons/react/24/outline';
 
 const buttons = [
     {
         href: '/menu',
         icon: HomeIcon,
         label: 'Retour au menu',
+        style: 'hover:bg-white/20 text-stone-200 dark:text-stone-950',
+    },
+    {
+        href: '/lignes',
+        icon: PlusIcon,
+        label: 'Ajout rapide d’un train',
+        style: 'hover:bg-white/20 text-stone-200 dark:text-stone-950',
+    },
+    {
+        href: '/vision',
+        icon: EyeIcon,
+        label: 'Ajout rapide d’un train',
         style: 'hover:bg-white/20 text-stone-200 dark:text-stone-950',
     },
     {

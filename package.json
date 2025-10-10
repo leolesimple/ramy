@@ -9,9 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@capacitor/cli": "^7.4.2",
-    "@capacitor/core": "^7.4.2",
-    "@capacitor/ios": "^7.4.2",
     "@heroicons/react": "^2.2.0",
     "@supabase/ssr": "^0.6.1",
     "clsx": "^2.1.1",
@@ -31,5 +28,6 @@
     "eslint-config-next": "^15.5.2",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.18.2+sha256.93421022fe0156d7cbdf699edc3d7eab39654986eac14f927d02b85f0dac6d61"
 }
