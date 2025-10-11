@@ -20,6 +20,7 @@ type Materiel = {
 };
 
 type Voiture = {
+    mission: string;
     id: string;
     numero_voiture: string;
     code_porte: string | null;
@@ -73,7 +74,7 @@ export default function VisionTablePage() {
         if (params.id && idMateriel) {
             fetchData();
         }
-    }, [params.id, idMateriel]);
+    }, [params.id, idMateriel, supabase]);
 
     if (!ligne || !materiel) return null;
 
@@ -97,6 +98,10 @@ export default function VisionTablePage() {
     const handleAdd = () => {
         router.push(`/ajout/${ligne.id}/numVoiture?idMateriel=${materiel.id}`);
     };
+
+    function parseUTC(dateStr: string) {
+        return new Date(dateStr.endsWith('Z') ? dateStr : dateStr + 'Z');
+    }
 
     return (
         <div className="w-full mx-auto py-10 px-5">
@@ -128,11 +133,12 @@ export default function VisionTablePage() {
             {filtered.length > 0 ? (
                 <div className="px-0 sm:px-2">
                     <div className="overflow-x-auto mx-auto max-w-full rounded-xl">
-                        <table className="w-full table-auto text-left text-[15px] sm:text-sm text-slate-50 dark:text-slate-900">
+                        <table
+                            className="w-full table-auto text-left text-[15px] sm:text-sm text-slate-50 dark:text-slate-900">
                             <thead className="sticky top-0 z-10">
                             <tr className="border-b border-slate-800/50 dark:border-slate-300/50 bg-slate-900/30 dark:bg-white/10 backdrop-blur-md">
                                 <th className="py-3.5 pl-4 pr-6 font-semibold tracking-wide text-slate-200 dark:text-slate-800">Numéro</th>
-                                <th className="py-3.5 pr-6 font-semibold tracking-wide text-slate-200 dark:text-slate-800">Porte</th>
+                                <th className="py-3.5 pr-6 font-semibold tracking-wide text-slate-200 dark:text-slate-800">Mission</th>
                                 <th className="py-3.5 pr-4 font-semibold tracking-wide text-slate-300 dark:text-slate-700">Date</th>
                             </tr>
                             </thead>
@@ -143,11 +149,20 @@ export default function VisionTablePage() {
                                     className="border-b border-slate-800/40 dark:border-slate-300/40 even:bg-slate-900/10 dark:even:bg-white/40 hover:bg-slate-800/30 dark:hover:bg-slate-300/40 transition-colors"
                                 >
                                     <td className="py-3.5 pl-4 pr-6 text-lg font-semibold">{v.numero_voiture}</td>
-                                    <td className="py-3.5 pr-6 text-md">{v.code_porte || '-'}</td>
-                                    <td className="py-3.5 pr-4 text-[1rem] text-slate-400 dark:text-slate-950 whitespace-nowrap tabular-nums">
-                                        {new Date(v.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}{" "}
-                                        {new Date(v.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false })}
-
+                                    <td className="py-3.5 pr-6 text-md">{v.mission || '-'}</td>
+                                    <td>
+                                        {parseUTC(v.created_at).toLocaleDateString('fr-FR', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric',
+                                            timeZone: 'Europe/Paris'
+                                        })}{" "}
+                                        {parseUTC(v.created_at).toLocaleTimeString('fr-FR', {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            hour12: false,
+                                            timeZone: 'Europe/Paris'
+                                        })}
                                     </td>
                                 </tr>
                             ))}

@@ -4,7 +4,7 @@ import type {Metadata} from 'next';
 import ClientLayoutWrapper from './ui/ClientLayoutWrapper';
 import {ThemeProvider} from './context/ThemeProvider';
 import { ThemeColorMeta } from "./context/ThemeColorMeta";
-import type { Viewport } from 'next'
+//import type { Viewport } from 'next'
 
 export const metadata: Metadata = {
     title: 'RAMY',
