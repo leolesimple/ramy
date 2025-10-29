@@ -26,10 +26,6 @@ Le projet est développé comme un **outil personnel** auto-hébergeable sur un 
 * 🌓 Support light/dark mode
 * 🎉 Nouvelle UI encore plus pratique et agréable (>= v0.5.0)
 
-> [!IMPORTANT]  
-> L'app web sort en version stable **v1.0**, ce mercredi 4 septembre. 
-> Elle est désormais pleinement fonctionnelle et prête pour un usage quotidien.
-
 ---
 
 ## 🧱 Structure de l’app
