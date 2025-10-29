@@ -27,7 +27,7 @@ export default function NumVoiturePage() {
 
     const [supabase, setSupabase] = useState<any>(null);
     const [numeroVoiture, setNumeroVoiture] = useState('');
-    const [codePorte, setCodePorte] = useState('');
+    const [mission, setMission] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [confirmation, setConfirmation] = useState(false);
@@ -80,7 +80,7 @@ export default function NumVoiturePage() {
         fetchData().then(() => {
             // Reset form fields after fetching data
             setNumeroVoiture('');
-            setCodePorte('');
+            setMission('');
         });
     }, [supabase, idMateriel, idLigne]);
 
@@ -99,7 +99,7 @@ export default function NumVoiturePage() {
                 id_ligne: idLigne,
                 id_materiel: idMateriel,
                 numero_voiture: numeroVoiture.trim(),
-                code_porte: codePorte.trim() || null,
+                mission: mission.trim() || null,
             });
 
             if (insertError) throw insertError;
@@ -165,7 +165,7 @@ export default function NumVoiturePage() {
                         onClick={() => router.push(`/vision/${idLigne}/table?idMateriel=${idMateriel}`)}
                         className="mt-6 w-full py-2 px-4 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 text-blue-100 transition-colors duration-400 font-medium dark:bg-blue-300/40 dark:text-blue-900 dark:hover:bg-blue-400/40"
                     >
-                        Voir l'historique
+                        Voir l&#39;historique
                     </button>
 
                     <button
@@ -206,17 +206,17 @@ export default function NumVoiturePage() {
 
                 <div className="mb-4">
                     <label
-                        htmlFor="code-porte"
+                        htmlFor="mission"
                         className="block mb-1 font-medium text-stone-400 dark:text-stone-800"
                     >
-                        Porte
+                        Mission (optionnel)
                     </label>
                     <input
-                        id="code-porte"
+                        id="mission"
                         type="text"
                         placeholder="1D, d3"
-                        value={codePorte}
-                        onChange={(e) => setCodePorte(e.target.value)}
+                        value={mission}
+                        onChange={(e) => setMission(e.target.value)}
                         className="w-full p-2 rounded-xl bg-stone-800 border-[1px] border-stone-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-white dark:border-stone-950/20 dark:focus:ring-blue-500"
                     />
                 </div>

@@ -1,5 +1,26 @@
 'use client';
 
+type Ligne = {
+    id: string;
+    nom: string;
+    icon: string;
+    couleur: string;
+};
+
+type Materiel = {
+    id: string;
+    nom: string;
+    icon: string;
+};
+
+type Voiture = {
+    mission: string;
+    id: string;
+    numero_voiture: string;
+    code_porte: string | null;
+    created_at: string;
+};
+
 import {motion} from 'framer-motion';
 import {Button} from '../ui/Button';
 import { useTheme } from '@app/context/ThemeProvider';

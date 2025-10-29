@@ -50,7 +50,7 @@ async function AsyncVisionPage({ params }: { params: { id: string } }) {
         .in('id', idsMateriels);
 
     return (
-        <div className="max-w-5xl mx-auto py-10 px-4">
+        <div className="max-w-[1140px] w-full mx-auto py-10 px-4">
             <VisionHeader ligne={ligne} prefixeLigne={prefixeLigne} backHref={"/vision"} />
             <h2 className="text-xl font-semibold text-white mb-6 dark:text-slate-900">
                 Choisissez un matériel
