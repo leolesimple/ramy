@@ -214,7 +214,7 @@ export default function NumVoiturePage() {
                     <input
                         id="mission"
                         type="text"
-                        placeholder="1D, d3"
+                        placeholder="QHAR12, MALA, 130859..."
                         value={mission}
                         onChange={(e) => setMission(e.target.value)}
                         className="w-full p-2 rounded-xl bg-stone-800 border-[1px] border-stone-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-white dark:border-stone-950/20 dark:focus:ring-blue-500"
