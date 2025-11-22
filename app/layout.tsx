@@ -7,7 +7,10 @@ import { ThemeColorMeta } from "./context/ThemeColorMeta";
 //import type { Viewport } from 'next'
 
 export const metadata: Metadata = {
-    title: 'RAMY',
+    title: {
+        template: '%s | RAMY',
+        default: 'RAMY', // a default is required when creating a template
+    },
     description: 'Votre journal personnel des trains',
     manifest: '/manifest.json',
 };
@@ -20,9 +23,8 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
             <meta name="apple-mobile-web-app-capable" content="yes" />
             <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
             <link rel="apple-touch-icon" href="/ios/180.png" />
-            <title>RAMY</title>
         </head>
-        <body className="min-h-screen bg-stone-950 text-stone-200 font-sans antialiased flex flex-col dark:bg-stone-50 dark:text-stone-950 transition-colors duration-500">
+        <body className="min-h-screen bg-slate-950 text-slate-200 font-sans antialiased flex flex-col dark:bg-slate-50 dark:text-slate-950 transition-colors duration-500">
         <ThemeProvider>
             <ThemeColorMeta />
             <ClientLayoutWrapper>{children}</ClientLayoutWrapper>

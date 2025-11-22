@@ -4,6 +4,15 @@ import withPWA from 'next-pwa';
 const nextConfig: NextConfig = {
     reactStrictMode: true,
     // Tu peux ajouter ici d'autres options si tu veux
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'images.unsplash.com',
+                pathname: '/**',
+            },
+        ],
+    },
 };
 
 export default withPWA({

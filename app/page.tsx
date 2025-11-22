@@ -26,7 +26,7 @@ export default function MenuPage() {
     return (
         <>
             <div
-                className="flex flex-col h-full items-center justify-center bg-stone-950 text-stone-200 font-sans antialiased px-4 text-center space-y-8 overflow-hidden dark:bg-stone-50 dark:text-stone-950 bg-cover bg-center"
+                className="flex flex-col h-full items-center justify-center bg-slate-950 text-slate-200 font-sans antialiased px-4 text-center space-y-8 overflow-hidden dark:bg-slate-50 dark:text-slate-950 bg-cover bg-center"
             >
                 <motion.h2
                     className="text-4xl font-bold max-w-md"
