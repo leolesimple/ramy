@@ -1,15 +1,17 @@
 // Redirect user to /menu if they try to access /ui
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 
 export default function Page() {
     const router = useRouter();
-    const supabase = createBrowserClient(
+    
+    // Initialize Supabase client once with useMemo
+    const supabase = useMemo(() => createBrowserClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    ), []);
 
     useEffect(() => {
         const checkSession = async () => {
@@ -21,7 +23,5 @@ export default function Page() {
         checkSession();
     }, [router, supabase]);
 
-    return (
-        <></>
-    );
+    return null;
 }

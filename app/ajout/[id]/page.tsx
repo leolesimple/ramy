@@ -3,15 +3,16 @@ import {createClient} from '@/lib/supabaseClient';
 import PageHeader from '@/app/ui/Header';
 import Card from '@/app/ui/Card';
 import Image from 'next/image';
-import ThemeToggle from "@app/ui/ThemeToggle";
+import {getLignePrefixe} from '@/lib/utils';
 
 type PageProps = {
     params: Promise<{ id: string }>;
 };
 
 export default async function Page({params}: PageProps) {
-    const {id} = await params;
+    const {id: ligneId} = await params;
     const supabase = await createClient();
+    
     // Auth check
     const {
         data: {user},
@@ -19,38 +20,34 @@ export default async function Page({params}: PageProps) {
     if (!user) {
         return notFound();
     }
-    const ligneId = id;
-    // Récupère la ligne
-    const {data: ligne, error: ligneError} = await supabase
-        .from('lignes')
-        .select('*')
-        .eq('id', ligneId)
-        .single();
-    if (ligneError || !ligne) return notFound();
-    // Récupère les matériels liés à la ligne
-    const {data: liaisons, error: liaisonError} = await supabase
-        .from('ligne_materiels')
-        .select('materiel_id')
-        .eq('ligne_id', ligneId);
-    if (liaisonError || !liaisons) return notFound();
-    const materielIds = liaisons.map((l) => l.materiel_id);
+    
+    // Fetch ligne and liaisons in parallel for better performance
+    const [ligneResult, liaisonsResult] = await Promise.all([
+        supabase
+            .from('lignes')
+            .select('id, nom, prefixe')
+            .eq('id', ligneId)
+            .single(),
+        supabase
+            .from('ligne_materiels')
+            .select('materiel_id')
+            .eq('ligne_id', ligneId)
+    ]);
+    
+    if (ligneResult.error || !ligneResult.data) return notFound();
+    if (liaisonsResult.error || !liaisonsResult.data) return notFound();
+    
+    const ligne = ligneResult.data;
+    const materielIds = liaisonsResult.data.map((l) => l.materiel_id);
+    
+    // Fetch only needed columns from materiels
     const {data: materiels, error: matError} = await supabase
         .from('materiels')
-        .select('*')
+        .select('id, nom, icon')
         .in('id', materielIds);
     if (matError || !materiels) return notFound();
 
-    let prefixeLigne = "";
-    if (ligne.prefixe) {
-        prefixeLigne = ligne.prefixe;
-    } else if (ligne.nom) {
-        const firstLetter = ligne.nom.charAt(0).toUpperCase();
-        if (['A', 'B', 'C', 'D', 'E'].includes(firstLetter)) {
-            prefixeLigne = `RER ${firstLetter}`;
-        } else {
-            prefixeLigne = `Transilien ${firstLetter}`;
-        }
-    }
+    const prefixeLigne = getLignePrefixe(ligne);
 
     return (
         <main className="px-4 mx-auto">

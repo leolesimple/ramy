@@ -6,9 +6,10 @@ import PageHeader from "@app/ui/Header";
 export default async function VisionPage() {
     const supabase = await createClient();
 
+    // Fetch only needed columns instead of all columns
     const {data: lignes, error} = await supabase
         .from('lignes')
-        .select('*')
+        .select('id, nom, couleur, icon')
         .order('nom');
 
     if (error || !lignes) {

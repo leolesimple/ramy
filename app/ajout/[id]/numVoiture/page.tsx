@@ -1,10 +1,11 @@
 'use client';
 
 import {useParams, useRouter, useSearchParams} from 'next/navigation';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {createBrowserClient} from '@supabase/ssr';
+import type {SupabaseClient} from '@supabase/supabase-js';
 import PageHeader from "@app/ui/Header";
-import ThemeToggle from "@app/ui/ThemeToggle";
+import {getLignePrefixe} from '@/lib/utils';
 
 type Materiel = {
     id: string;
@@ -22,10 +23,15 @@ export default function NumVoiturePage() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const idLigne = params?.id ?? '';
+    const idLigne = (params?.id ?? '') as string;
     const idMateriel = searchParams.get('idMateriel') ?? '';
 
-    const [supabase, setSupabase] = useState<any>(null);
+    // Initialize Supabase client once using useMemo to prevent recreation on each render
+    const supabase = useMemo<SupabaseClient>(() => createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    ), []);
+    
     const [numeroVoiture, setNumeroVoiture] = useState('');
     const [mission, setMission] = useState('');
     const [error, setError] = useState<string | null>(null);
@@ -35,15 +41,6 @@ export default function NumVoiturePage() {
     const [ligne, setLigne] = useState<Ligne | null>(null);
 
     useEffect(() => {
-        const client = createBrowserClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-        setSupabase(client);
-    }, []);
-
-    useEffect(() => {
-        if (!supabase) return;
         if (!idMateriel || !idLigne) {
             setError("ID matériel ou ligne manquant.");
             setLoading(false);
@@ -52,41 +49,41 @@ export default function NumVoiturePage() {
 
         async function fetchData() {
             try {
-                const {data: matData, error: errMat} = await supabase
-                    .from('materiels')
-                    .select('id, nom')
-                    .eq('id', idMateriel)
-                    .single();
+                // Fetch materiel and ligne in parallel for better performance
+                const [matResult, ligResult] = await Promise.all([
+                    supabase
+                        .from('materiels')
+                        .select('id, nom')
+                        .eq('id', idMateriel)
+                        .single(),
+                    supabase
+                        .from('lignes')
+                        .select('id, nom, prefixe')
+                        .eq('id', idLigne)
+                        .single()
+                ]);
 
-                if (errMat) throw errMat;
-                setMateriel(matData);
-
-                const {data: ligData, error: errLig} = await supabase
-                    .from('lignes')
-                    .select('id, nom')
-                    .eq('id', idLigne)
-                    .single();
-
-                if (errLig) throw errLig;
-                setLigne(ligData);
-
+                if (matResult.error) throw matResult.error;
+                if (ligResult.error) throw ligResult.error;
+                
+                setMateriel(matResult.data);
+                setLigne(ligResult.data);
                 setLoading(false);
-            } catch (e: any) {
-                setError(e.message ?? 'Erreur chargement données');
+            } catch (e: unknown) {
+                const errorMessage = e instanceof Error ? e.message : 'Erreur chargement données';
+                setError(errorMessage);
                 setLoading(false);
             }
         }
 
         fetchData().then(() => {
-            // Reset form fields after fetching data
             setNumeroVoiture('');
             setMission('');
         });
     }, [supabase, idMateriel, idLigne]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!supabase) return;
         setError(null);
 
         if (!numeroVoiture.trim()) {
@@ -105,14 +102,13 @@ export default function NumVoiturePage() {
             if (insertError) throw insertError;
 
             setConfirmation(true);
-        } catch (e: any) {
-            setError(e.message ?? 'Erreur insertion');
+        } catch (e: unknown) {
+            const errorMessage = e instanceof Error ? e.message : 'Erreur insertion';
+            setError(errorMessage);
         }
-    };
+    }, [supabase, idLigne, idMateriel, numeroVoiture, mission]);
 
-    const handleDelete = async () => {
-        if (!supabase) return;
-
+    const handleDelete = useCallback(async () => {
         try {
             const {error: delError} = await supabase
                 .from('voitures')
@@ -126,22 +122,14 @@ export default function NumVoiturePage() {
             if (delError) throw delError;
 
             router.push('/ajout/' + idLigne + '?idMateriel=' + idMateriel);
-        } catch (e: any) {
-            setError(e.message ?? 'Erreur suppression');
+        } catch (e: unknown) {
+            const errorMessage = e instanceof Error ? e.message : 'Erreur suppression';
+            setError(errorMessage);
         }
-    };
+    }, [supabase, idLigne, idMateriel, numeroVoiture, router]);
 
-    //fetch ligne.nom from idLigne
-    // and set lignePrefixe based on the ligne.nom (nom beetween A and E = RER, else = Transilien)
-
-    const ligneNom = ligne?.nom || '';
-
-    let lignePrefixe;
-    if (ligneNom.startsWith('A') || ligneNom.startsWith('B') || ligneNom.startsWith('C') || ligneNom.startsWith('D') || ligneNom.startsWith('E')) {
-        lignePrefixe = 'RER ' + ligneNom;
-    } else {
-        lignePrefixe = 'Transilien ' + ligneNom;
-    }
+    // Use the utility function for ligne prefix
+    const lignePrefixe = useMemo(() => getLignePrefixe(ligne), [ligne]);
 
     if (loading) {
         return (

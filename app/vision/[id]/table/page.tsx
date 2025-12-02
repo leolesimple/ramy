@@ -1,31 +1,49 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {createBrowserClient} from '@supabase/ssr';
 import {VisionHeader} from '@/app/ui/VisionHeader';
 import {useParams, useRouter, useSearchParams} from 'next/navigation';
 import {PlusIcon} from '@heroicons/react/24/solid';
+import {getLignePrefixe} from '@/lib/utils';
 
 type Ligne = {
     id: string;
     nom: string;
     icon: string;
-    couleur: string;
+    prefixe?: string;
 };
 
 type Materiel = {
     id: string;
     nom: string;
-    icon: string;
 };
 
 type Voiture = {
     mission: string;
     id: string;
     numero_voiture: string;
-    code_porte: string | null;
     created_at: string;
 };
+
+// Date formatter options defined once outside component to avoid recreation
+const dateFormatOptions: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: 'Europe/Paris'
+};
+
+const timeFormatOptions: Intl.DateTimeFormatOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Europe/Paris'
+};
+
+function parseUTC(dateStr: string): Date {
+    return new Date(dateStr.endsWith('Z') ? dateStr : dateStr + 'Z');
+}
 
 export default function VisionTablePage() {
     const params = useParams<{ id: string }>();
@@ -34,12 +52,12 @@ export default function VisionTablePage() {
 
     const idMateriel = searchParams.get('idMateriel');
 
-    const [supabase] = useState(() =>
+    // Initialize Supabase client once using useMemo
+    const supabase = useMemo(() =>
         createBrowserClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
             process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        )
-    );
+        ), []);
 
     const [ligne, setLigne] = useState<Ligne | null>(null);
     const [materiel, setMateriel] = useState<Materiel | null>(null);
@@ -47,61 +65,55 @@ export default function VisionTablePage() {
     const [search, setSearch] = useState('');
 
     useEffect(() => {
+        if (!params.id || !idMateriel) return;
+        
         const fetchData = async () => {
-            const {data: ligneData} = await supabase
-                .from('lignes')
-                .select('*')
-                .eq('id', params.id)
-                .single();
-            setLigne(ligneData);
+            // Fetch all data in parallel for better performance
+            const [ligneResult, matResult, voituresResult] = await Promise.all([
+                supabase
+                    .from('lignes')
+                    .select('id, nom, icon, prefixe')
+                    .eq('id', params.id)
+                    .single(),
+                supabase
+                    .from('materiels')
+                    .select('id, nom')
+                    .eq('id', idMateriel)
+                    .single(),
+                supabase
+                    .from('voitures')
+                    .select('id, numero_voiture, mission, created_at')
+                    .eq('id_ligne', params.id)
+                    .eq('id_materiel', idMateriel)
+                    .order('created_at', {ascending: false})
+            ]);
 
-            const {data: matData} = await supabase
-                .from('materiels')
-                .select('*')
-                .eq('id', idMateriel)
-                .single();
-            setMateriel(matData);
-
-            const {data: vData} = await supabase
-                .from('voitures')
-                .select('*')
-                .eq('id_ligne', params.id)
-                .eq('id_materiel', idMateriel)
-                .order('created_at', {ascending: false});
-            setVoitures(vData ?? []);
+            if (ligneResult.data) setLigne(ligneResult.data);
+            if (matResult.data) setMateriel(matResult.data);
+            setVoitures(voituresResult.data ?? []);
         };
 
-        if (params.id && idMateriel) {
-            fetchData();
-        }
+        fetchData();
     }, [params.id, idMateriel, supabase]);
 
-    if (!ligne || !materiel) return null;
+    // Memoize prefix calculation
+    const prefixeLigne = useMemo(() => getLignePrefixe(ligne), [ligne]);
 
-    let prefixeLigne = "";
-    if (ligne.nom) {
-        const firstLetter = ligne.nom.charAt(0).toUpperCase();
-        if (['A', 'B', 'C', 'D', 'E'].includes(firstLetter)) {
-            prefixeLigne = `RER ${firstLetter}`;
-        } else {
-            prefixeLigne = `Transilien ${firstLetter}`;
+    // Memoize filtered results to avoid recalculation on every render
+    const filtered = useMemo(() => {
+        const searchLower = search.toLowerCase();
+        return voitures.filter((v) =>
+            v.numero_voiture.toLowerCase().includes(searchLower)
+        );
+    }, [voitures, search]);
+
+    const handleAdd = useCallback(() => {
+        if (ligne && materiel) {
+            router.push(`/ajout/${ligne.id}/numVoiture?idMateriel=${materiel.id}`);
         }
-    } else {
-        prefixeLigne = "";
-    }
+    }, [router, ligne, materiel]);
 
-
-    const filtered = voitures.filter((v) =>
-        v.numero_voiture.toLowerCase().includes(search.toLowerCase())
-    );
-
-    const handleAdd = () => {
-        router.push(`/ajout/${ligne.id}/numVoiture?idMateriel=${materiel.id}`);
-    };
-
-    function parseUTC(dateStr: string) {
-        return new Date(dateStr.endsWith('Z') ? dateStr : dateStr + 'Z');
-    }
+    if (!ligne || !materiel) return null;
 
     return (
         <div className="w-full mx-auto py-10 px-5">
@@ -151,18 +163,8 @@ export default function VisionTablePage() {
                                     <td className="py-3.5 pl-4 pr-6 text-lg font-semibold">{v.numero_voiture}</td>
                                     <td className="py-3.5 pr-6 text-md">{v.mission || '-'}</td>
                                     <td>
-                                        {parseUTC(v.created_at).toLocaleDateString('fr-FR', {
-                                            day: '2-digit',
-                                            month: '2-digit',
-                                            year: 'numeric',
-                                            timeZone: 'Europe/Paris'
-                                        })}{" "}
-                                        {parseUTC(v.created_at).toLocaleTimeString('fr-FR', {
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            hour12: false,
-                                            timeZone: 'Europe/Paris'
-                                        })}
+                                        {parseUTC(v.created_at).toLocaleDateString('fr-FR', dateFormatOptions)}{" "}
+                                        {parseUTC(v.created_at).toLocaleTimeString('fr-FR', timeFormatOptions)}
                                     </td>
                                 </tr>
                             ))}

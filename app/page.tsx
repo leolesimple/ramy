@@ -2,16 +2,18 @@
 
 import {motion} from 'framer-motion';
 import {HomeButton} from "@app/ui/HomeButton";
-import {useEffect} from "react";
+import {useEffect, useMemo} from "react";
 import {useRouter} from "next/navigation";
 import {createBrowserClient} from "@supabase/ssr";
 
-export default function MenuPage() {
+export default function HomePage() {
     const router = useRouter();
-    const supabase = createBrowserClient(
+    
+    // Initialize Supabase client once with useMemo
+    const supabase = useMemo(() => createBrowserClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    ), []);
 
     useEffect(() => {
         const checkSession = async () => {
@@ -21,7 +23,7 @@ export default function MenuPage() {
             }
         };
         checkSession();
-    }, []);
+    }, [supabase, router]);
 
     return (
         <>

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import {ArrowLeftCircleIcon, ArrowLeftIcon} from '@heroicons/react/24/solid';
+import {ArrowLeftCircleIcon} from '@heroicons/react/24/solid';
 import Link from "next/link";
 
 type VisionHeaderProps = {

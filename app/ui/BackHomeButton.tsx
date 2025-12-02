@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { HomeIcon } from '@heroicons/react/24/outline';
 
 export default function BackHomeButton() {

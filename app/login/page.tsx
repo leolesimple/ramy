@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import { motion } from 'framer-motion';
@@ -8,10 +8,12 @@ import {LoginButton} from "@app/ui/LoginButton";
 
 export default function LoginPage() {
     const router = useRouter();
-    const supabase = createBrowserClient(
+    
+    // Initialize Supabase client once with useMemo
+    const supabase = useMemo(() => createBrowserClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    ), []);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,9 +28,9 @@ export default function LoginPage() {
             }
         };
         checkSession();
-    }, []);
+    }, [supabase, router]);
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleLogin = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
         const { error } = await supabase.auth.signInWithPassword({
@@ -41,7 +43,7 @@ export default function LoginPage() {
         } else {
             router.push('/menu');
         }
-    };
+    }, [supabase, email, password, router]);
 
     return (
         <motion.form

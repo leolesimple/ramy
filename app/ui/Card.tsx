@@ -14,8 +14,8 @@ type LigneCardProps = {
 
 
 type CardProps = {
-    color: string;
-    children?: ReactNode; // ← ici on accepte le contenu
+    color?: string;
+    children?: ReactNode;
 };
 
 export function LigneCard({ id, nom, couleur, icon }: LigneCardProps) {
@@ -47,7 +47,7 @@ export function LigneCard({ id, nom, couleur, icon }: LigneCardProps) {
     );
 }
 
-export default function Card({ color, children }: CardProps) {
+export default function Card({ children }: CardProps) {
     return (
         <div
             className={clsx(

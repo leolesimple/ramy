@@ -1,7 +1,6 @@
 import {createClient} from '@/lib/supabaseClient';
 import {LigneCard} from '@app/ui/Card';
 import PageHeader from '@app/ui/Header';
-import {ThemeColorMeta} from "@app/context/ThemeColorMeta";
 
 export default async function Lignes() {
     const supabase = await createClient();

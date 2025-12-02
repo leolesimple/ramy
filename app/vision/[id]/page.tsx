@@ -3,50 +3,43 @@ import { notFound } from 'next/navigation';
 import { VisionHeader } from '@/app/ui/VisionHeader';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getLignePrefixe } from '@/lib/utils';
 
-export default function VisionMaterielPage({ params }: any) {
-    return <AsyncVisionPage params={params} />;
-}
+type PageProps = {
+    params: Promise<{ id: string }>;
+};
 
-async function AsyncVisionPage({ params }: { params: { id: string } }) {
+export default async function VisionMaterielPage({ params }: PageProps) {
+    const { id } = await params;
     const supabase = await createClient();
 
-    const { data: ligne } = await supabase
-        .from('lignes')
-        .select('*')
-        .eq('id', params.id)
-        .single();
+    // Fetch ligne and liens in parallel for better performance
+    const [ligneResult, liensResult] = await Promise.all([
+        supabase
+            .from('lignes')
+            .select('id, nom, icon, prefixe')
+            .eq('id', id)
+            .single(),
+        supabase
+            .from('ligne_materiels')
+            .select('materiel_id')
+            .eq('ligne_id', id)
+    ]);
 
-    if (!ligne) notFound();
-
-    let prefixeLigne = "";
-    if (ligne.prefixe) {
-        prefixeLigne = ligne.prefixe;
-    } else if (ligne.nom) {
-        const firstLetter = ligne.nom.charAt(0).toUpperCase();
-        if (['A', 'B', 'C', 'D', 'E'].includes(firstLetter)) {
-            prefixeLigne = `RER ${firstLetter}`;
-        } else {
-            prefixeLigne = `Transilien ${firstLetter}`;
-        }
-
-    }
-
-    const { data: liens, error } = await supabase
-        .from('ligne_materiels')
-        .select('materiel_id')
-        .eq('ligne_id', params.id);
-
-    if (!liens || error) {
-        console.error('Erreur récupération liens ligne/matériel', error);
+    if (ligneResult.error || !ligneResult.data) notFound();
+    if (liensResult.error || !liensResult.data) {
+        console.error('Erreur récupération liens ligne/matériel', liensResult.error);
         notFound();
     }
 
-    const idsMateriels = liens.map((l) => l.materiel_id);
+    const ligne = ligneResult.data;
+    const prefixeLigne = getLignePrefixe(ligne);
+    const idsMateriels = liensResult.data.map((l) => l.materiel_id);
 
+    // Fetch only needed columns from materiels
     const { data: materiels } = await supabase
         .from('materiels')
-        .select('*')
+        .select('id, nom, icon')
         .in('id', idsMateriels);
 
     return (
@@ -60,7 +53,7 @@ async function AsyncVisionPage({ params }: { params: { id: string } }) {
                     {materiels.map((mat) => (
                         <Link
                             key={mat.id}
-                            href={`/vision/${params.id}/table?idMateriel=${mat.id}`}
+                            href={`/vision/${id}/table?idMateriel=${mat.id}`}
                             className="group relative"
                         >
                             <div className="w-full rounded-2xl p-4 text-white text-center font-bold flex flex-col items-center justify-center h-36 border-white/10 bg-white/5 backdrop-blur-xl transition-transform active:scale-95 dark:bg-slate-800/20 dark:text-slate-200 dark:border-slate-400">
