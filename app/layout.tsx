@@ -24,7 +24,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
             <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
             <link rel="apple-touch-icon" href="/ios/180.png" />
         </head>
-        <body className="min-h-screen bg-slate-950 text-slate-200 font-sans antialiased flex flex-col dark:bg-slate-50 dark:text-slate-950 transition-colors duration-500">
+        <body className="min-h-screen bg-slate-950 text-slate-200 font-sans antialiased flex flex-col transition-colors duration-500">
         <ThemeProvider>
             <ThemeColorMeta />
             <ClientLayoutWrapper>{children}</ClientLayoutWrapper>

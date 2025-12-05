@@ -6,6 +6,8 @@ import {createBrowserClient} from '@supabase/ssr';
 import Image from "next/image";
 import {motion} from 'framer-motion';
 import {LoginButton} from "@app/ui/LoginButton";
+import Label from "@app/ui/Label";
+import Link from "next/link";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -18,7 +20,6 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
 
-    // Redirection si déjà connecté
     useEffect(() => {
         const checkSession = async () => {
             const {data} = await supabase.auth.getSession();
@@ -46,11 +47,11 @@ export default function LoginPage() {
 
     return (
         <>
-            <div className="container flex flex-col place-items-center h-screen">
+            <div className="container flex flex-col place-items-center h-screen lg:flex-row lg:justify-between lg:px-20 mx-auto">
                 <div className="flex justify-center items-center relative h-1/2 max-w-200 w-full">
                     <div className="relative h-9/10 w-9/10 rounded-4xl overflow-hidden">
                         <Image
-                            src="https://images.unsplash.com/photo-1581262208435-41726149a759?q=80&w=3562&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            src="/login/ramy_hero.png"
                             alt=""
                             fill
                             className="object-cover"
@@ -58,45 +59,57 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <div className="flex justify-center h-1/2 max-w-200 w-full">
+                <div className="flex lg:place-items-center h-1/2 max-w-200 w-full">
                     <motion.form
                         onSubmit={handleLogin}
-                        className="flex flex-col gap-4 max-w-xl p-sm-6 w-9/10 mx-auto mt-20 text-white dark:text-slate-950"
+                        className="flex flex-col gap-2 sm:gap-2 max-w-xl p-sm-6 w-9/10 mx-auto text-white"
                         initial={{opacity: 0, y: 20}}
                         animate={{opacity: 1, y: 0}}
                         transition={{duration: 0.6, ease: 'easeOut'}}
                     >
+                        {/*Retour à l'accueil*/}
+                        <Link href="/" className="text-sm text-blue-400 hover:underline">← Retour à l'accueil</Link>
                         <motion.h1
                             className="text-2xl font-bold text-center mb-2"
                             initial={{opacity: 0, y: 10}}
                             animate={{opacity: 1, y: 0}}
                             transition={{delay: 0.2, duration: 0.5}}
                         >
-                            Se connecter
+                            Se connecter à RAMY
                         </motion.h1>
 
-                        <input
-                            type="email"
-                            placeholder="Adresse email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full p-2 rounded-xl bg-slate-800/80 border-[1px] border-slate-200/10 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-white dark:border-slate-950/20 dark:focus:ring-blue-500"
-                            required/>
-
-                        <input
-                            type="password"
-                            placeholder="Mot de passe"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full p-2 rounded-xl bg-slate-800 border-[1px] border-slate-700 focus:ring-2 focus:ring-blue-500 transition-all dark:bg-white dark:border-slate-950/20 dark:focus:ring-blue-500"
-                            required/>
-
+                        <div className="flex flex-col">
+                            <Label htmlFor="email">Adresse email</Label>
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="gisele.michu@email.net"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full p-2 rounded-xl bg-slate-800/80 border-[1px] border-slate-200/10 focus:ring-2 focus:ring-blue-500 transition-all"
+                                required/>
+                        </div>
+                        <div className="flex flex-col">
+                            <Label htmlFor="password">Mot de Passe</Label>
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="supersecretpassword"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full p-2 rounded-xl bg-slate-800/80 border-[1px] border-slate-200/10 focus:ring-2 focus:ring-blue-500 transition-all"
+                                required/>
+                            <div className="text-sm text-right mt-1">
+                                <Link href="/login/lost/" className="text-blue-400 hover:underline" aria-disabled={true}
+                                >Mot de passe oublié ?</Link>
+                            </div>
+                        </div>
                         <motion.div
                             initial={{opacity: 0, scale: 1.05}}
                             animate={{opacity: 1, scale: 1}}
                             transition={{delay: 0.5, duration: 0.4, ease: 'easeOut'}}
                         >
-                            <LoginButton>Se connecter</LoginButton>
+                            <LoginButton>Connexion</LoginButton>
                         </motion.div>
 
                         {error && (
