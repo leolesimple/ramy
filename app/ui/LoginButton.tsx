@@ -19,8 +19,9 @@ export function LoginButton({
         <button
             type={type}
             disabled={disabled}
+            tabIndex={0}
             className={clsx(
-                'inline-block mt-6 px-6 py-3 bg-white/10 hover:bg-white/20 text-stone-200   rounded-xl backdrop-blur-md transition-all duration-600 font-medium dark:bg-stone-950/10 dark:text-stone-950  hover:dark:bg-stone-950/20',
+                'inline-block px-6 py-3 bg-white/10 hover:bg-white/20 text-slate-200   rounded-xl backdrop-blur-md transition-all duration-600 font-medium dark:bg-slate-950/10 dark:text-slate-950  hover:dark:bg-slate-950/20',
                 className
             )}
         >
