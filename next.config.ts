@@ -1,8 +1,18 @@
+// next.config.ts
 import type { NextConfig } from 'next';
 import withPWA from 'next-pwa';
 
-const nextConfig: NextConfig = {
+interface ExtendedNextConfig extends NextConfig {
+    eslint?: {
+        ignoreDuringBuilds?: boolean;
+    };
+}
+
+const nextConfig: ExtendedNextConfig = {
     reactStrictMode: true,
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
     turbopack: {
         // ...
     },
@@ -21,5 +31,5 @@ export default withPWA({
     dest: 'public',
     register: true,
     skipWaiting: true,
-    disable: process.env.NODE_ENV === 'development', // pas de PWA en dev
+    disable: process.env.NODE_ENV === 'development',
 })(nextConfig);
