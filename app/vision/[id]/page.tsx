@@ -8,7 +8,84 @@ export default function VisionMaterielPage({ params }: any) {
     return <AsyncVisionPage params={params} />;
 }
 
-async function AsyncVisionPage({ params }: { params: { id: string } }) {
+async function AsyncVisionPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const supabase = await createClient();
+
+    const { data: ligne } = await supabase
+        .from('lignes')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+    if (!ligne) notFound();
+
+    let prefixeLigne = "";
+    if (ligne.prefixe) {
+        prefixeLigne = ligne.prefixe;
+    } else if (ligne.nom) {
+        const firstLetter = ligne.nom.charAt(0).toUpperCase();
+        if (['A', 'B', 'C', 'D', 'E'].includes(firstLetter)) {
+            prefixeLigne = `RER ${firstLetter}`;
+        } else {
+            prefixeLigne = `Transilien ${firstLetter}`;
+        }
+    }
+
+    const { data: liens, error } = await supabase
+        .from('ligne_materiels')
+        .select('materiel_id')
+        .eq('ligne_id', id);
+
+    if (!liens || error) {
+        console.error('Erreur récupération liens ligne/matériel', error);
+        notFound();
+    }
+
+    const idsMateriels = liens.map((l) => l.materiel_id);
+
+    const { data: materiels } = await supabase
+        .from('materiels')
+        .select('*')
+        .in('id', idsMateriels);
+
+    return (
+        <div className="max-w-[1140px] w-full mx-auto py-10 px-4">
+            <VisionHeader ligne={ligne} prefixeLigne={prefixeLigne} backHref={"/vision"} />
+            <h2 className="text-xl font-semibold text-white mb-6 dark:text-slate-900">
+                Choisissez un matériel
+            </h2>
+            {materiels && materiels.length > 0 ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                    {materiels.map((mat) => (
+                        <Link
+                            key={mat.id}
+                            href={`/vision/${id}/table?idMateriel=${mat.id}`}
+                            className="group relative"
+                        >
+                            <div className="w-full rounded-2xl p-4 text-white text-center font-bold flex flex-col items-center justify-center h-36 border-white/10 bg-white/5 backdrop-blur-xl transition-transform active:scale-95 dark:bg-slate-800/20 dark:text-slate-200 dark:border-slate-400">
+                                <Image
+                                    src={mat.icon}
+                                    alt={mat.nom}
+                                    width={56}
+                                    height={56}
+                                    className="w-30 h-30 object-contain mx-auto mb-2 group-hover:scale-110 transition-transform duration-200"
+                                />
+                                <span className="sr-only">{mat.nom}</span>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            ) : (
+                <p className="text-center text-slate-400 dark:text-slate-500 mt-10">
+                    Aucun matériel trouvé pour cette ligne.
+                </p>
+            )}
+        </div>
+    );
+}
+
+/*async function AsyncVisionPage({ params }: { params: { id: string } }) {
     const supabase = await createClient();
 
     const { data: ligne } = await supabase
@@ -83,4 +160,4 @@ async function AsyncVisionPage({ params }: { params: { id: string } }) {
             )}
         </div>
     );
-}
+}*/
